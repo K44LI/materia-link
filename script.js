@@ -1,8 +1,5 @@
-
 (() => {
 'use strict';
-
-
 const ICONS = {
   home:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
   box:'<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>',
@@ -40,8 +37,6 @@ const ICONS = {
   cog:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>'
 };
 const ic = (n, s = 20) => `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n] || ''}</svg>`;
-
-
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -51,31 +46,26 @@ const norm = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u03
 const nowHM = () => new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 let toastT;
 const toast = msg => { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2600); };
-
 const TYPES = [
   { k:'Plástico', e:'🧴' }, { k:'Metal', e:'🥫' }, { k:'Papel', e:'📄' },
   { k:'Vidro', e:'🍾' }, { k:'Eletrônico', e:'🖥️' }, { k:'Outros', e:'📦' }
 ];
 const emoji = k => (TYPES.find(t => t.k === k) || { e:'📦' }).e;
-
-
 const COMPANIES = [
-  { id:1, name:'EcoPack Embalagens', km:2.4, city:'Diadema', uf:'SP', rating:4.8, reviews:124, hours:'Segunda a Sábado • 8h às 17h', min:10, x:34, y:58,
+  { id:1, name:'EcoPack Embalagens', km:2.4, city:'Diadema', uf:'SP', rating:4.8, reviews:124, hours:'Segunda a Sábado • 8h às 17h', min:10, x:34, y:58, lat:-23.6861, lng:-46.6228,
     mats:[{t:'Plástico',sub:'PET (garrafas, embalagens)',kg:50,price:1.2},{t:'Papel',sub:'Papelão e papel branco',kg:30,price:.8},{t:'Metal',sub:'Alumínio e latas',kg:40,price:1.5},{t:'Vidro',sub:'Garrafas e potes',kg:20,price:.6}] },
-  { id:2, name:'MetalSul', km:4.8, city:'Santo André', uf:'SP', rating:4.6, reviews:87, hours:'Segunda a Sexta • 7h às 16h', min:5, x:62, y:72,
+  { id:2, name:'MetalSul', km:4.8, city:'Santo André', uf:'SP', rating:4.6, reviews:87, hours:'Segunda a Sexta • 7h às 16h', min:5, x:62, y:72, lat:-23.6639, lng:-46.5383,
     mats:[{t:'Metal',sub:'Ferro, aço e alumínio',kg:120,price:1.9},{t:'Eletrônico',sub:'Sucata eletrônica',kg:15,price:3.2}] },
-  { id:3, name:'RePlast', km:7.2, city:'São Bernardo do Campo', uf:'SP', rating:4.7, reviews:64, hours:'Segunda a Sexta • 8h às 18h', min:20, x:70, y:30,
+  { id:3, name:'RePlast', km:7.2, city:'São Bernardo do Campo', uf:'SP', rating:4.7, reviews:64, hours:'Segunda a Sexta • 8h às 18h', min:20, x:70, y:30, lat:-23.6914, lng:-46.5646,
     mats:[{t:'Plástico',sub:'PET, PEAD e PP',kg:200,price:1.4}] },
-  { id:4, name:'GreenRecicla', km:10.5, city:'São Caetano do Sul', uf:'SP', rating:4.5, reviews:52, hours:'Segunda a Sábado • 9h às 17h', min:10, x:22, y:28,
+  { id:4, name:'GreenRecicla', km:10.5, city:'São Caetano do Sul', uf:'SP', rating:4.5, reviews:52, hours:'Segunda a Sábado • 9h às 17h', min:10, x:22, y:28, lat:-23.6229, lng:-46.5548,
     mats:[{t:'Papel',sub:'Papelão',kg:90,price:.7},{t:'Vidro',sub:'Vidro incolor',kg:60,price:.5},{t:'Plástico',sub:'Plástico filme',kg:40,price:.9}] }
 ];
 const coById = id => COMPANIES.find(c => c.id === Number(id));
 const coTypes = c => [...new Set(c.mats.map(m => m.t))];
-
-
 const KEY = 'materialink-v1';
 const DEFAULTS = {
-  auth:false, role:'usuario', name:'Kethelyn Eimori', company:'EcoPack Embalagens', email:'',
+  auth:false, role:'usuario', name:'', company:'', email:'', accounts:[], currentAccountId:null,
   myMaterials:[
     { id:1, type:'Plástico', name:'Plástico PET', mode:'Doar',   kg:50, price:0,   active:true },
     { id:2, type:'Papel',    name:'Papelão',      mode:'Vender', kg:80, price:1.2, active:true },
@@ -92,31 +82,29 @@ const DEFAULTS = {
 };
 let S;
 try { S = Object.assign({}, DEFAULTS, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch { S = { ...DEFAULTS }; }
-const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {} };
+if (!Array.isArray(S.accounts)) S.accounts = [];
+if (!Array.isArray(S.myMaterials)) S.myMaterials = [];
+if (!Array.isArray(S.requests)) S.requests = [];
+if (S.auth && !S.currentAccountId) S.auth = false;
+const save = () => { try { const account = S.accounts.find(item => item.id === S.currentAccountId); if (account) { account.materials = S.myMaterials; account.requests = S.requests; } localStorage.setItem(KEY, JSON.stringify(S)); } catch {} };
 const ui = { q:'', chip:'Todos', tab:'novas', favTab:'empresas', mapSel:null, signup:'usuario', loginRole:'usuario' };
-
 const go = h => { if (location.hash === '#/' + h) render(); else location.hash = '#/' + h; };
 const route = () => { const h = location.hash.replace(/^#\/?/, ''); const [n, ...r] = h.split('/'); return [n || '', r.join('/')]; };
 const isCo = () => S.role === 'empresa';
-const displayName = () => isCo() ? S.company : S.name;
+const displayName = () => (isCo() ? S.company : S.name) || (isCo() ? 'Sua empresa' : 'Usuário');
 const firstName = () => displayName().split(' ')[0];
-
 const logo = (size = 'md', light = false) =>
   `<span class="logo ${size} ${light ? 'light' : ''}"><span class="logo-mark">${ic('refresh', '60%')}</span><span class="logo-text"><b>Matéria</b><b>Link</b></span></span>`;
-
 const pageHead = (title, sub = '', back = null, extra = '') =>
   `<div class="page-head">${back ? `<button class="back" data-go="${back}" aria-label="Voltar">${ic('left')}</button>` : ''}<div class="grow"><h1>${esc(title)}</h1>${sub ? `<p>${esc(sub)}</p>` : ''}</div>${extra}</div>`;
-
 const NAV_CO = [['home','Início','home'],['materiais','Materiais','box'],['solicitacoes','Solicitações','msg'],['mapa','Mapa','pin'],['perfil','Perfil','user']];
 const NAV_US = [['home','Início','home'],['empresas','Empresas','building'],['mapa','Mapa','pin'],['favoritos','Favoritos','heart'],['perfil','Perfil','user']];
-
 function shell(active, inner) {
   const nav = isCo() ? NAV_CO : NAV_US;
   const side = nav.map(([r, l, i]) => `<a class="nav-link ${active === r ? 'on' : ''}" href="#/${r}">${ic(i)} ${l}</a>`).join('');
   const bn = isCo() ? NAV_CO : [NAV_US[0], NAV_US[1], NAV_US[2], NAV_US[4]];
   const items = bn.map(([r, l, i]) => `<a class="${active === r ? 'on' : ''}" href="#/${r}">${ic(i, 22)}<span>${l}</span></a>`);
-  // FAB no centro (entre 2º e 3º item)
-  const mid = isCo() ? 2 : 2;
+  const mid = 2;
   const cells = [...items.slice(0, mid), `<a class="fab" href="#/novo" aria-label="Cadastrar material">${ic('plus', 26)}</a>`, ...items.slice(mid)];
   return `<div class="shell">
     <aside class="side">
@@ -129,10 +117,9 @@ function shell(active, inner) {
       <header class="top"><a href="#/home">${logo('md')}</a><span class="spacer"></span><button class="icon-btn" data-act="bell" aria-label="Notificações">${ic('bell')}</button></header>
       <main class="view" id="view">${inner}</main>
     </div>
-    <nav class="bottom" aria-label="Navegação principal">${cells.join('')}</nav>
+    <nav class="bottom" style="grid-template-columns:repeat(${cells.length},1fr)" aria-label="Navegação principal">${cells.join('')}</nav>
   </div>`;
 }
-
 function authShell(card) {
   return `<div class="auth">
     <section class="auth-hero">
@@ -148,10 +135,8 @@ function authShell(card) {
     <section class="auth-main"><div class="auth-card"><div class="m-logo">${logo('lg')}</div>${card}</div></section>
   </div>`;
 }
-
 const pwField = (name, ph, ac = 'current-password') =>
   `<label class="field">${ic('lock')}<input type="password" name="${name}" placeholder="${ph}" autocomplete="${ac}" required minlength="${name === 'senha' || name === 'senha2' ? 8 : 1}"><button type="button" data-act="toggle-pw" aria-label="Mostrar senha">${ic('eye')}</button></label>`;
-
 function viewLogin() {
   const co = ui.loginRole === 'empresa';
   return authShell(`
@@ -171,7 +156,6 @@ function viewLogin() {
     </div>
     <p class="auth-foot">Não tem uma conta? <a href="#/cadastro">Cadastre-se</a></p>`);
 }
-
 function viewCadastro() {
   const co = ui.signup === 'empresa';
   const form = co ? `
@@ -197,11 +181,9 @@ function viewCadastro() {
     <form data-form="${co ? 'cad-empresa' : 'cad-usuario'}" novalidate>${form}</form>
     <p class="auth-foot">Já tem uma conta? <a href="#/login">Entrar</a></p>`);
 }
-
 function viewHome() {
   return isCo() ? homeEmpresa() : homeUsuario();
 }
-
 function homeEmpresa() {
   const mats = S.myMaterials, act = mats.filter(m => m.active);
   const news = S.requests.filter(r => r.status === 'nova').length;
@@ -217,7 +199,6 @@ function homeEmpresa() {
     <div class="sec-head"><h2>Materiais em destaque</h2><a href="#/materiais">Ver todos ›</a></div>
     <div class="grid auto">${feat}</div>`;
 }
-
 function homeUsuario() {
   const chips = [{ k:'Todos', e:'⊞' }, ...TYPES].map(t => `<button class="chip ${ui.chip === t.k ? 'on' : ''}" data-act="chip" data-v="${t.k}"><span class="e">${t.e}</span>${t.k}</button>`).join('');
   return `
@@ -227,7 +208,6 @@ function homeUsuario() {
     <div class="sec-head"><h2>Empresas próximas</h2><a href="#/empresas">Ver todas ›</a></div>
     <div class="grid auto" id="clist">${companyCards(filteredCos(false).slice(0, 6))}</div>`;
 }
-
 function filteredCos(useFilters = true) {
   const q = norm(ui.q);
   return COMPANIES.filter(c => {
@@ -242,7 +222,6 @@ function filteredCos(useFilters = true) {
     return true;
   });
 }
-
 function companyCards(list) {
   if (!list.length) return '<div class="empty" style="grid-column:1/-1">Nenhuma empresa encontrada com esses critérios.</div>';
   return list.map(c => `<article class="card co">
@@ -251,7 +230,6 @@ function companyCards(list) {
     <div class="co-foot"><span class="muted">A partir de ${c.min} kg</span><button class="btn btn-primary btn-sm" data-go="empresa/${c.id}">Ver detalhes ${ic('arrow', 14)}</button></div>
   </article>`).join('');
 }
-
 function viewEmpresas() {
   const f = S.filters;
   const cities = [...new Set(COMPANIES.map(c => c.city))];
@@ -273,7 +251,6 @@ function viewEmpresas() {
       <div><div class="chips">${chips}</div><div class="grid auto" id="clist" style="margin-top:6px">${companyCards(filteredCos(true))}</div></div>
     </div>`;
 }
-
 function matCard(m) {
   return `<article class="mat-card ${m.active ? '' : 'off'}">
     <div class="thumb t-${m.type}">${emoji(m.type)}</div>
@@ -287,13 +264,11 @@ function matCard(m) {
       <button class="icon-btn danger" data-act="del-mat" data-id="${m.id}" title="Excluir" aria-label="Excluir">${ic('trash', 16)}</button>
     </div></article>`;
 }
-
 function viewMateriais() {
   const title = isCo() ? 'Meus materiais' : 'Minhas doações / vendas';
   const list = S.myMaterials.map(matCard).join('') || `<div class="empty card" style="grid-column:1/-1">Nada por aqui ainda.<br><br><a class="btn btn-primary btn-sm" href="#/novo">${ic('plus', 16)} Cadastrar material</a></div>`;
   return `${pageHead(title, 'Materiais recicláveis que você está oferecendo.', isCo() ? null : 'perfil', `<a class="btn btn-primary btn-sm desk-only" href="#/novo">${ic('plus', 16)} Novo</a>`)}<div class="grid auto">${list}</div>`;
 }
-
 let formMode = 'Doar';
 function viewNovo() {
   formMode = 'Doar';
@@ -315,7 +290,6 @@ function viewNovo() {
     <button class="btn btn-primary" type="submit">Publicar material ${ic('arrow')}</button>
   </form>`;
 }
-
 function viewSolicitacoes() {
   const list = S.requests.filter(r => ui.tab === 'novas' ? r.status === 'nova' : r.status === 'andamento');
   const cards = list.map(r => `<article class="card req">
@@ -332,18 +306,164 @@ function viewSolicitacoes() {
     <div class="card loc-card"><div class="map" style="height:110px;min-height:0"><span class="pin" style="left:50%;top:75%"><span>${ic('leaf', 14)}</span></span></div>
       <div><b>${esc(S.company)}</b><p class="muted">Rua Exemplo, 123<br>São Bernardo do Campo - SP</p><button class="btn btn-outline btn-sm" style="margin-top:8px" data-go="mapa">${ic('pin', 16)} Ver no mapa</button></div></div>`;
 }
-
-function viewMapa() {
-  const sel = coById(ui.mapSel);
-  const pins = COMPANIES.map(c => `<button class="pin ${ui.mapSel === c.id ? 'on' : ''}" style="left:${c.x}%;top:${c.y}%" data-act="pin" data-id="${c.id}" aria-label="${esc(c.name)}"><span>${ic('leaf', 15)}</span></button>`).join('');
-  const card = sel ? `<div class="map-card"><div class="co-top"><span class="co-logo">${ic('leaf', 26)}</span><div><h3>${esc(sel.name)}</h3><span class="muted">${sel.km.toFixed(1).replace('.', ',')} km • ${esc(sel.city)}</span></div><button class="icon-btn" style="margin-left:auto" data-act="pin" data-id="0" aria-label="Fechar">${ic('x', 16)}</button></div>
-    <div class="co-tags">${coTypes(sel).map(t => `<span class="pill">${t}</span>`).join('')}</div><button class="btn btn-primary btn-sm" style="width:100%" data-go="empresa/${sel.id}">Ver detalhes</button></div>` : '';
-  return `${pageHead('Empresas próximas', 'Toque em um marcador para ver os detalhes.')}
-    <div class="map"><div class="map-search"><label class="field">${ic('search')}<input placeholder="Buscar nesta área"></label></div>
-      <span class="map-label" style="left:14%;top:50%">Diadema</span><span class="map-label" style="left:58%;top:50%">São Bernardo do Campo</span><span class="map-label" style="left:55%;top:84%">Santo André</span>
-      <span class="me-dot" style="left:46%;top:46%"></span>${pins}${card}</div>`;
+const LEAFLET_CSS = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+const LEAFLET_JS = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+const MAP_CSS = `
+.map-controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.map-controls .btn{width:auto;flex:1 1 180px;max-width:260px}
+.real-map{position:relative;z-index:0;height:min(62vh,540px);min-height:360px;border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);background:#e4efe2}
+.map-info{margin-top:10px;font-size:.9rem;font-weight:600;color:var(--muted)}
+#map-company-details .map-card{position:static;max-width:420px;margin-top:12px;box-shadow:var(--shadow)}
+.mk{background:none;border:0}
+.mk-pin{display:grid;place-items:center;width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--g600);color:#fff;border:2px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.28)}
+.mk-pin svg{transform:rotate(45deg)}
+.mk-pin.on{background:var(--g900)}
+.mk-me{display:block;width:18px;height:18px;border-radius:50%;background:var(--blue);border:3px solid #fff;box-shadow:0 0 0 8px rgba(47,125,246,.22)}
+.leaflet-popup-content{font-family:inherit;font-weight:700}
+`;
+let mapInstance = null;
+let userMarker = null;
+let leafletPromise = null;
+function injectMapStyles() {
+  if ($('#map-styles')) return;
+  const style = document.createElement('style');
+  style.id = 'map-styles';
+  style.textContent = MAP_CSS;
+  document.head.appendChild(style);
 }
-
+function loadLeaflet() {
+  if (window.L) return Promise.resolve(window.L);
+  if (leafletPromise) return leafletPromise;
+  leafletPromise = new Promise((resolve, reject) => {
+    const css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = LEAFLET_CSS;
+    document.head.appendChild(css);
+    const js = document.createElement('script');
+    js.src = LEAFLET_JS;
+    js.onload = () => resolve(window.L);
+    js.onerror = () => { leafletPromise = null; reject(new Error('leaflet')); };
+    document.head.appendChild(js);
+  });
+  return leafletPromise;
+}
+function disposeMap() {
+  if (mapInstance) { try { mapInstance.remove(); } catch {} }
+  mapInstance = null;
+  userMarker = null;
+}
+function updateMapStatus(message) {
+  const status = $('#map-status');
+  if (status) status.textContent = message;
+}
+const companyIcon = (selected = false) => L.divIcon({
+  className: 'mk',
+  html: `<span class="mk-pin ${selected ? 'on' : ''}">${ic('leaf', 16)}</span>`,
+  iconSize: [34, 34],
+  iconAnchor: [17, 41],
+  popupAnchor: [0, -40]
+});
+const userIcon = () => L.divIcon({
+  className: 'mk',
+  html: '<span class="mk-me"></span>',
+  iconSize: [18, 18],
+  iconAnchor: [9, 9],
+  popupAnchor: [0, -12]
+});
+function showCompanyCard(company) {
+  ui.mapSel = company.id;
+  const details = $('#map-company-details');
+  if (details) details.innerHTML = mapCompanyCard(company);
+}
+function buildMap() {
+  const el = $('#real-map');
+  if (!el || route()[0] !== 'mapa') return;
+  disposeMap();
+  const saved = S.userLocation && Number.isFinite(Number(S.userLocation.lat)) && Number.isFinite(Number(S.userLocation.lng))
+    ? [Number(S.userLocation.lat), Number(S.userLocation.lng)]
+    : null;
+  mapInstance = L.map(el, { scrollWheelZoom: true });
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; Colaboradores do OpenStreetMap',
+    maxZoom: 19
+  }).addTo(mapInstance);
+  const points = [];
+  COMPANIES.forEach(company => {
+    const pos = [company.lat, company.lng];
+    points.push(pos);
+    L.marker(pos, { icon: companyIcon(ui.mapSel === company.id), title: company.name })
+      .addTo(mapInstance)
+      .bindPopup(`<strong>${esc(company.name)}</strong><br>${esc(company.city)} - ${esc(company.uf)}`)
+      .on('click', () => showCompanyCard(company));
+  });
+  if (saved) {
+    userMarker = L.marker(saved, { icon: userIcon(), title: 'Você está aqui', zIndexOffset: 1000 })
+      .addTo(mapInstance)
+      .bindPopup('Sua localização');
+    mapInstance.setView(saved, 14);
+    updateMapStatus('Sua localização está marcada no mapa.');
+  } else {
+    mapInstance.fitBounds(points, { padding: [40, 40] });
+    updateMapStatus('Toque em "Minha localização" para mostrar onde você está.');
+  }
+  const selected = coById(ui.mapSel);
+  if (selected) showCompanyCard(selected);
+  setTimeout(() => { if (mapInstance) mapInstance.invalidateSize(); }, 150);
+}
+function initializeMap() {
+  if (!$('#real-map')) return;
+  injectMapStyles();
+  updateMapStatus('Carregando mapa...');
+  loadLeaflet().then(buildMap, () => updateMapStatus('Não foi possível carregar o mapa. Verifique sua conexão com a internet.'));
+}
+function mapCompanyCard(company) {
+  return `<div class="map-card">
+    <div class="co-top"><span class="co-logo">${ic('leaf', 26)}</span><div><h3>${esc(company.name)}</h3><span class="muted">${esc(company.city)} - ${esc(company.uf)}</span></div></div>
+    <div class="co-tags">${coTypes(company).map(type => `<span class="pill">${type}</span>`).join('')}</div>
+    <button class="btn btn-primary btn-sm" style="width:100%" data-go="empresa/${company.id}">Ver detalhes</button>
+  </div>`;
+}
+function locateUser() {
+  if (!mapInstance) { toast('O mapa ainda está carregando. Tente de novo em instantes.'); return; }
+  if (!navigator.geolocation) { updateMapStatus('Seu navegador não oferece suporte à localização.'); toast('Seu navegador não oferece suporte à localização.'); return; }
+  updateMapStatus('Buscando sua localização...');
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+      S.userLocation = { lat, lng };
+      save();
+      if (!mapInstance) return;
+      if (userMarker) userMarker.setLatLng([lat, lng]);
+      else userMarker = L.marker([lat, lng], { icon: userIcon(), title: 'Você está aqui', zIndexOffset: 1000 }).addTo(mapInstance).bindPopup('Sua localização');
+      mapInstance.setView([lat, lng], 15);
+      userMarker.openPopup();
+      updateMapStatus('Sua localização foi encontrada e marcada no mapa.');
+      toast('Localização encontrada!');
+    },
+    error => {
+      const messages = {
+        1: ['Permissão de localização negada.', 'Permissão de localização negada. Clique no cadeado ao lado do endereço do site e permita a localização.'],
+        2: ['Localização indisponível.', 'Sua localização não está disponível no momento. Verifique se a localização do dispositivo está ligada.'],
+        3: ['A busca demorou demais.', 'A busca pela localização demorou demais. Tente novamente.']
+      };
+      const [short, long] = messages[error.code] || ['Não foi possível obter a localização.', 'Não foi possível obter sua localização.'];
+      updateMapStatus(long);
+      toast(short);
+    },
+    { enableHighAccuracy: false, timeout: 20000, maximumAge: 60000 }
+  );
+}
+function viewMapa() {
+  return `${pageHead('Empresas próximas', 'Visualize o mapa e encontre sua localização.')}
+    <div class="map-controls">
+      <button class="btn btn-primary" data-act="locate-me">${ic('pin')} Minha localização</button>
+      <button class="btn btn-outline" data-act="refresh-map">${ic('refresh')} Atualizar mapa</button>
+    </div>
+    <div id="real-map" class="real-map"></div>
+    <div class="map-info" id="map-status" role="status" aria-live="polite">Carregando mapa...</div>
+    <div id="map-company-details"></div>`;
+}
 function viewEmpresa(id) {
   const c = coById(id); if (!c) return viewEmpresas();
   const fav = S.favCos.includes(c.id);
@@ -356,7 +476,6 @@ function viewEmpresa(id) {
       <div><div class="sec-head" style="margin-top:0"><h2>Materiais disponíveis</h2></div>${rows}
         <button class="btn btn-primary" data-go="chat/${c.id}">${ic('msg')} Falar com a empresa</button></div></div>`;
 }
-
 function viewMaterial(key) {
   const [cid, idx] = key.split('-'); const c = coById(cid); const m = c && c.mats[Number(idx)];
   if (!m) return viewEmpresas();
@@ -369,7 +488,6 @@ function viewMaterial(key) {
       <ul class="info-list"><li>${ic('box')} Tipo: ${esc(m.sub)}</li><li>${ic('list')} Quantidade mínima: ${c.min} kg</li><li>${ic('gift')} Pagamento: Dinheiro / Pix</li><li>${ic('pin')} Localização: ${esc(c.city)} - ${c.uf}</li></ul>
       <button class="btn btn-primary" data-go="chat/${c.id}">${ic('msg')} Entrar em contato</button></div></div>`;
 }
-
 function viewFavoritos() {
   const cos = S.favCos.map(coById).filter(Boolean).map(c => `<div class="mat-row" data-go="empresa/${c.id}"><span class="co-logo" style="width:44px;height:44px">${ic('leaf', 22)}</span><div><b>${esc(c.name)}</b><small>${c.km.toFixed(1).replace('.', ',')} km • ${esc(c.city)} - SP</small></div><button class="icon-btn fav-btn on" data-act="fav-co" data-id="${c.id}" aria-label="Remover">${ic('heart', 18)}</button></div>`).join('');
   const mats = S.favMats.map(k => { const [cid, i] = k.split('-'); const c = coById(cid); const m = c && c.mats[i]; return m ? `<div class="mat-row" data-go="material/${k}"><span class="e">${emoji(m.t)}</span><div><b>${m.t} — ${esc(c.name)}</b><small>${m.kg} kg • ${money(m.price)}/kg</small></div><button class="icon-btn fav-btn on" data-act="fav-mat" data-id="${k}" aria-label="Remover">${ic('heart', 18)}</button></div>` : ''; }).join('');
@@ -378,7 +496,6 @@ function viewFavoritos() {
     <div class="seg" style="max-width:380px"><button class="${ui.favTab === 'empresas' ? 'on' : ''}" data-act="fav-tab" data-v="empresas">Empresas</button><button class="${ui.favTab === 'materiais' ? 'on' : ''}" data-act="fav-tab" data-v="materiais">Materiais</button></div>
     <div style="max-width:640px">${body || '<div class="empty card">Você ainda não favoritou nada.</div>'}</div>`;
 }
-
 function chatInfo(id) {
   if (String(id).startsWith('r')) { const r = S.requests.find(x => 'r' + x.id === id); return r ? { name:r.name, sub:'Interessado' } : null; }
   const c = coById(id); return c ? { name:c.name, sub:'Online', co:true } : null;
@@ -399,7 +516,6 @@ function viewChat(id) {
     <div class="chat-body" id="chatbody">${msgs}</div>
     <form class="chat-input" data-form="chat" data-id="${id}"><input name="msg" placeholder="Digite uma mensagem..." autocomplete="off"><button class="send" aria-label="Enviar">${ic('send', 18)}</button></form></div>`;
 }
-
 function viewPerfil() {
   const item = (i, label, go, act) => `<button ${go ? `data-go="${go}"` : `data-act="soon"`}>${ic(i)}<span>${label}</span>${ic('right', 18)}</button>`;
   return `${pageHead(isCo() ? 'Perfil da empresa' : 'Meu perfil')}
@@ -411,7 +527,6 @@ function viewPerfil() {
       <button data-act="logout" style="color:var(--danger)">${ic('logout')}<span>Sair</span></button>
     </div>`;
 }
-
 const AUTH_ROUTES = ['login', 'cadastro'];
 function render() {
   let [name, arg] = route();
@@ -419,6 +534,7 @@ function render() {
   if (S.auth && (AUTH_ROUTES.includes(name) || !name)) { history.replaceState(null, '', '#/home'); name = 'home'; }
   if (name === 'empresas' && isCo()) name = 'home';
   if (name === 'solicitacoes' && !isCo()) name = 'home';
+  disposeMap();
   const app = $('#app');
   const TITLES = { login:'Entrar', cadastro:'Cadastro', home:'Início', empresas:'Empresas', materiais:'Materiais', novo:'Cadastrar material', solicitacoes:'Solicitações', mapa:'Mapa', empresa:'Empresa', material:'Material', favoritos:'Favoritos', chat:'Conversa', perfil:'Perfil' };
   document.title = (TITLES[name] || 'Matéria Link') + ' • Matéria Link';
@@ -428,20 +544,18 @@ function render() {
     const views = { home:viewHome, empresas:viewEmpresas, materiais:viewMateriais, novo:viewNovo, solicitacoes:viewSolicitacoes, mapa:viewMapa, empresa:() => viewEmpresa(arg), material:() => viewMaterial(arg), favoritos:viewFavoritos, chat:() => viewChat(arg), perfil:viewPerfil };
     const navKey = ({ empresa:'empresas', material:'empresas', chat:isCo() ? 'solicitacoes' : 'empresas', novo:'', materiais:isCo() ? 'materiais' : 'perfil' })[name] ?? name;
     app.innerHTML = shell(navKey, (views[name] || viewHome)());
+    if (name === 'mapa') initializeMap();
   }
   window.scrollTo(0, 0);
   const cb = $('#chatbody'); if (cb) cb.scrollTop = cb.scrollHeight;
 }
-
 function refreshList() { const l = $('#clist'); if (!l) return; l.innerHTML = companyCards(filteredCos(route()[0] === 'empresas')); }
-
 document.addEventListener('click', e => {
   const g = e.target.closest('[data-go]');
   const a = e.target.closest('[data-act]');
   if (a && !(g && g.contains(a) && g !== a && !a.contains(g) && false)) { if (handleAct(a, e)) return; }
   if (g) { e.preventDefault(); go(g.dataset.go); }
 });
-
 function handleAct(a, e) {
   const d = a.dataset, act = d.act, id = d.id;
   switch (act) {
@@ -450,7 +564,7 @@ function handleAct(a, e) {
     case 'signup-role': ui.signup = d.v; render(); return true;
     case 'forgot': toast('Enviamos um link de recuperação para o seu e-mail (demonstração).'); return true;
     case 'terms': e.preventDefault(); toast('Termos de Uso e Política de Privacidade (demonstração).'); return true;
-    case 'social': S.auth = true; S.role = ui.loginRole; save(); go('home'); return true;
+    case 'social': toast('Entre com o e-mail e a senha da sua conta.'); return true;
     case 'bell': toast('Você não tem novas notificações.'); return true;
     case 'soon': toast('Em breve!'); return true;
     case 'call': toast('Ligação indisponível na demonstração.'); return true;
@@ -464,15 +578,15 @@ function handleAct(a, e) {
     case 'del-mat': if (confirm('Excluir este material?')) { S.myMaterials = S.myMaterials.filter(x => x.id !== Number(id)); save(); render(); toast('Material excluído.'); } return true;
     case 'accept': { const r = S.requests.find(x => x.id === Number(id)); if (r) { r.status = 'andamento'; save(); render(); toast('Solicitação aceita! Combine os detalhes no chat.'); } return true; }
     case 'finish': S.requests = S.requests.filter(x => x.id !== Number(id)); save(); render(); toast('Solicitação concluída. Obrigado por reciclar!'); return true;
-    case 'pin': ui.mapSel = Number(id) || null; render(); return true;
+    case 'locate-me': locateUser(); return true;
+    case 'refresh-map': initializeMap(); toast('Mapa atualizado.'); return true;
     case 'fav-co': { const n = Number(id); S.favCos = S.favCos.includes(n) ? S.favCos.filter(x => x !== n) : [...S.favCos, n]; save(); render(); toast(S.favCos.includes(n) ? 'Empresa favoritada.' : 'Removida dos favoritos.'); return true; }
     case 'fav-mat': S.favMats = S.favMats.includes(id) ? S.favMats.filter(x => x !== id) : [...S.favMats, id]; save(); render(); return true;
-    case 'switch-role': S.role = isCo() ? 'usuario' : 'empresa'; save(); render(); toast('Agora você está na conta ' + (isCo() ? 'empresa' : 'usuário') + '.'); return true;
-    case 'logout': S.auth = false; save(); go('login'); return true;
+    case 'switch-role': toast('Para acessar outro perfil, saia e entre com a conta correspondente.'); return true;
+    case 'logout': save(); S.auth = false; S.currentAccountId = null; S.name = ''; S.company = ''; S.email = ''; S.myMaterials = []; S.requests = []; save(); go('login'); return true;
   }
   return false;
 }
-
 document.addEventListener('input', e => {
   const t = e.target;
   if (t.id === 'q') { ui.q = t.value; refreshList(); }
@@ -483,34 +597,61 @@ document.addEventListener('change', e => {
   if (f === 'type') { S.filters.types = $$('[data-filter="type"]:checked').map(i => i.value); save(); refreshList(); }
   if (f === 'city') { S.filters.city = t.value; save(); refreshList(); }
 });
-
 document.addEventListener('submit', e => {
   const form = e.target.closest('form[data-form]'); if (!form) return;
   e.preventDefault();
   const fd = Object.fromEntries(new FormData(form).entries());
   const err = m => { const el = $('#err'); if (el) el.textContent = m; };
   const kind = form.dataset.form;
-
   if (kind === 'login') {
-    if (!fd.email.trim() || !fd.senha) return err('Preencha e-mail e senha.');
-    S.auth = true; S.role = ui.loginRole; S.email = fd.email.trim();
-    const guess = fd.email.includes('@') ? fd.email.split('@')[0].replace(/[._-]+/g, ' ') : '';
-    if (guess && !isCo() && S.name === DEFAULTS.name) S.name = guess.replace(/\b\w/g, c => c.toUpperCase());
-    save(); toast('Bem-vindo(a) de volta!'); go('home');
+    const email = (fd.email || '').trim().toLowerCase();
+    const senha = fd.senha || '';
+    if (!email || !senha) return err('Preencha e-mail e senha.');
+    const account = S.accounts.find(item => item.role === ui.loginRole && (item.email.toLowerCase() === email || (item.role === 'empresa' && item.cnpj === email.replace(/\D/g, ''))) && item.password === senha);
+    if (!account) return err('E-mail, CNPJ ou senha incorretos. Confira também o tipo de conta selecionado.');
+    S.auth = true;
+    S.role = account.role;
+    S.currentAccountId = account.id;
+    S.name = account.name || '';
+    S.company = account.company || '';
+    S.email = account.email;
+    S.myMaterials = Array.isArray(account.materials) ? account.materials : [];
+    S.requests = Array.isArray(account.requests) ? account.requests : [];
+    save();
+    toast('Bem-vindo(a), ' + (account.role === 'empresa' ? account.company : account.name) + '!');
+    go('home');
   }
   else if (kind === 'cad-usuario') {
-    if (!fd.nome.trim() || !/^\S+@\S+\.\S+$/.test(fd.email)) return err('Informe nome e um e-mail válido.');
-    if (fd.senha.length < 8) return err('A senha deve ter pelo menos 8 caracteres.');
+    const nome = (fd.nome || '').trim();
+    const email = (fd.email || '').trim().toLowerCase();
+    if (!nome || !/^\S+@\S+\.\S+$/.test(email)) return err('Informe seu nome e um e-mail válido.');
+    if ((fd.senha || '').length < 8) return err('A senha deve ter pelo menos 8 caracteres.');
     if (fd.senha !== fd.senha2) return err('As senhas não coincidem.');
-    Object.assign(S, { auth:true, role:'usuario', name:fd.nome.trim(), email:fd.email }); save(); toast('Conta criada com sucesso!'); go('home');
+    if (S.accounts.some(item => item.email.toLowerCase() === email)) return err('Já existe uma conta cadastrada com esse e-mail.');
+    const account = { id:Date.now(), role:'usuario', name:nome, email, password:fd.senha, materials:[], requests:[] };
+    S.accounts.push(account);
+    S.auth = true; S.role = 'usuario'; S.currentAccountId = account.id;
+    S.name = account.name; S.company = ''; S.email = account.email;
+    S.myMaterials = []; S.requests = [];
+    save(); toast('Conta criada com sucesso!'); go('home');
   }
   else if (kind === 'cad-empresa') {
-    const cnpj = fd.cnpj.replace(/\D/g, '');
-    if (!fd.razao.trim()) return err('Informe o nome da empresa.');
+    const company = (fd.razao || '').trim();
+    const email = (fd.email || '').trim().toLowerCase();
+    const cnpj = (fd.cnpj || '').replace(/\D/g, '');
+    if (!company) return err('Informe o nome da empresa.');
     if (cnpj.length !== 14) return err('CNPJ inválido — digite os 14 números.');
-    if (!/^\S+@\S+\.\S+$/.test(fd.email)) return err('Informe um e-mail corporativo válido.');
-    if (fd.senha.length < 8) return err('A senha deve ter pelo menos 8 caracteres.');
-    Object.assign(S, { auth:true, role:'empresa', company:fd.razao.trim(), email:fd.email }); save(); toast('Empresa cadastrada com sucesso!'); go('home');
+    if (!/^\S+@\S+\.\S+$/.test(email)) return err('Informe um e-mail corporativo válido.');
+    if ((fd.senha || '').length < 8) return err('A senha deve ter pelo menos 8 caracteres.');
+    if (!fd.tel || !fd.tel.trim()) return err('Informe o telefone da empresa.');
+    if (!fd.end || !fd.end.trim()) return err('Informe o endereço da empresa.');
+    if (S.accounts.some(item => item.email.toLowerCase() === email || (item.role === 'empresa' && item.cnpj === cnpj))) return err('Já existe uma conta com esse e-mail ou CNPJ.');
+    const account = { id:Date.now(), role:'empresa', company, email, cnpj, password:fd.senha, tel:fd.tel.trim(), address:fd.end.trim(), materials:[], requests:[] };
+    S.accounts.push(account);
+    S.auth = true; S.role = 'empresa'; S.currentAccountId = account.id;
+    S.name = ''; S.company = account.company; S.email = account.email;
+    S.myMaterials = []; S.requests = [];
+    save(); toast('Empresa cadastrada com sucesso!'); go('home');
   }
   else if (kind === 'novo') {
     const kg = Number(fd.kg);
@@ -532,14 +673,12 @@ document.addEventListener('submit', e => {
     setTimeout(() => { const i = $('.chat-input input'); if (i) i.focus(); }, 0);
   }
 });
-
 document.addEventListener('input', e => {
   if (e.target.name !== 'cnpj') return;
   let v = e.target.value.replace(/\D/g, '').slice(0, 14);
   v = v.replace(/^(\d{2})(\d)/, '$1.$2').replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3').replace(/\.(\d{3})(\d)/, '.$1/$2').replace(/(\d{4})(\d)/, '$1-$2');
   e.target.value = v;
 });
-
 window.addEventListener('hashchange', render);
 render();
 })();
