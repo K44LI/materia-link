@@ -1,684 +1,290 @@
-(() => {
-'use strict';
-const ICONS = {
-  home:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
-  box:'<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>',
-  msg:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
-  pin:'<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',
-  user:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
-  plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
-  mail:'<path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><polyline points="22,6 12,13 2,6"/>',
-  lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
-  eye:'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',
-  arrow:'<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>',
-  right:'<polyline points="9 18 15 12 9 6"/>',
-  left:'<polyline points="15 18 9 12 15 6"/>',
-  heart:'<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>',
-  search:'<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
-  sliders:'<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>',
-  bell:'<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
-  refresh:'<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>',
-  gift:'<polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>',
-  send:'<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>',
-  phone:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>',
-  building:'<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><line x1="8" y1="6" x2="8" y2="6.01"/><line x1="12" y1="6" x2="12" y2="6.01"/><line x1="16" y1="6" x2="16" y2="6.01"/><line x1="8" y1="10" x2="8" y2="10.01"/><line x1="12" y1="10" x2="12" y2="10.01"/><line x1="16" y1="10" x2="16" y2="10.01"/>',
-  list:'<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>',
-  x:'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
-  help:'<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
-  check:'<polyline points="20 6 9 17 4 12"/>',
-  pause:'<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>',
-  play:'<polygon points="5 3 19 12 5 21 5 3"/>',
-  trash:'<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>',
-  leaf:'<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
-  logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>',
-  swap:'<polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
-  clock:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
-  shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
-  cog:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>'
-};
-const ic = (n, s = 20) => `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n] || ''}</svg>`;
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const $ = (s, r = document) => r.querySelector(s);
-const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-const money = n => 'R$ ' + Number(n || 0).toFixed(2).replace('.', ',');
-const initials = n => String(n).trim().split(/\s+/).slice(0, 2).map(p => p[0]).join('').toUpperCase() || '?';
-const norm = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-const nowHM = () => new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-let toastT;
-const toast = msg => { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2600); };
-const TYPES = [
-  { k:'Plástico', e:'🧴' }, { k:'Metal', e:'🥫' }, { k:'Papel', e:'📄' },
-  { k:'Vidro', e:'🍾' }, { k:'Eletrônico', e:'🖥️' }, { k:'Outros', e:'📦' }
-];
-const emoji = k => (TYPES.find(t => t.k === k) || { e:'📦' }).e;
-const COMPANIES = [
-  { id:1, name:'EcoPack Embalagens', km:2.4, city:'Diadema', uf:'SP', rating:4.8, reviews:124, hours:'Segunda a Sábado • 8h às 17h', min:10, x:34, y:58, lat:-23.6861, lng:-46.6228,
-    mats:[{t:'Plástico',sub:'PET (garrafas, embalagens)',kg:50,price:1.2},{t:'Papel',sub:'Papelão e papel branco',kg:30,price:.8},{t:'Metal',sub:'Alumínio e latas',kg:40,price:1.5},{t:'Vidro',sub:'Garrafas e potes',kg:20,price:.6}] },
-  { id:2, name:'MetalSul', km:4.8, city:'Santo André', uf:'SP', rating:4.6, reviews:87, hours:'Segunda a Sexta • 7h às 16h', min:5, x:62, y:72, lat:-23.6639, lng:-46.5383,
-    mats:[{t:'Metal',sub:'Ferro, aço e alumínio',kg:120,price:1.9},{t:'Eletrônico',sub:'Sucata eletrônica',kg:15,price:3.2}] },
-  { id:3, name:'RePlast', km:7.2, city:'São Bernardo do Campo', uf:'SP', rating:4.7, reviews:64, hours:'Segunda a Sexta • 8h às 18h', min:20, x:70, y:30, lat:-23.6914, lng:-46.5646,
-    mats:[{t:'Plástico',sub:'PET, PEAD e PP',kg:200,price:1.4}] },
-  { id:4, name:'GreenRecicla', km:10.5, city:'São Caetano do Sul', uf:'SP', rating:4.5, reviews:52, hours:'Segunda a Sábado • 9h às 17h', min:10, x:22, y:28, lat:-23.6229, lng:-46.5548,
-    mats:[{t:'Papel',sub:'Papelão',kg:90,price:.7},{t:'Vidro',sub:'Vidro incolor',kg:60,price:.5},{t:'Plástico',sub:'Plástico filme',kg:40,price:.9}] }
-];
-const coById = id => COMPANIES.find(c => c.id === Number(id));
-const coTypes = c => [...new Set(c.mats.map(m => m.t))];
-const KEY = 'materialink-v1';
-const DEFAULTS = {
-  auth:false, role:'usuario', name:'', company:'', email:'', accounts:[], currentAccountId:null,
-  myMaterials:[
-    { id:1, type:'Plástico', name:'Plástico PET', mode:'Doar',   kg:50, price:0,   active:true },
-    { id:2, type:'Papel',    name:'Papelão',      mode:'Vender', kg:80, price:1.2, active:true },
-    { id:3, type:'Metal',    name:'Alumínio',     mode:'Vender', kg:25, price:4.5, active:true }
-  ],
-  requests:[
-    { id:1, name:'Ana Souza',    mat:'Plástico PET', kg:30, km:3.2, place:'São Bernardo do Campo - SP', status:'nova' },
-    { id:2, name:'Lucas Ferreira', mat:'Papelão',    kg:50, km:5.8, place:'Diadema - SP',                status:'nova' },
-    { id:3, name:'Carla Mendes', mat:'Alumínio',     kg:15, km:7.4, place:'São Paulo - SP',              status:'nova' }
-  ],
-  favCos:[1,2,3,4], favMats:['1-0','1-1'],
-  chats:{}, nextId:10,
-  filters:{ types:[], dist:50, city:'' }
-};
-let S;
-try { S = Object.assign({}, DEFAULTS, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch { S = { ...DEFAULTS }; }
-if (!Array.isArray(S.accounts)) S.accounts = [];
-if (!Array.isArray(S.myMaterials)) S.myMaterials = [];
-if (!Array.isArray(S.requests)) S.requests = [];
-if (S.auth && !S.currentAccountId) S.auth = false;
-const save = () => { try { const account = S.accounts.find(item => item.id === S.currentAccountId); if (account) { account.materials = S.myMaterials; account.requests = S.requests; } localStorage.setItem(KEY, JSON.stringify(S)); } catch {} };
-const ui = { q:'', chip:'Todos', tab:'novas', favTab:'empresas', mapSel:null, signup:'usuario', loginRole:'usuario' };
-const go = h => { if (location.hash === '#/' + h) render(); else location.hash = '#/' + h; };
-const route = () => { const h = location.hash.replace(/^#\/?/, ''); const [n, ...r] = h.split('/'); return [n || '', r.join('/')]; };
-const isCo = () => S.role === 'empresa';
-const displayName = () => (isCo() ? S.company : S.name) || (isCo() ? 'Sua empresa' : 'Usuário');
-const firstName = () => displayName().split(' ')[0];
-const logo = (size = 'md', light = false) =>
-  `<span class="logo ${size} ${light ? 'light' : ''}"><span class="logo-mark">${ic('refresh', '60%')}</span><span class="logo-text"><b>Matéria</b><b>Link</b></span></span>`;
-const pageHead = (title, sub = '', back = null, extra = '') =>
-  `<div class="page-head">${back ? `<button class="back" data-go="${back}" aria-label="Voltar">${ic('left')}</button>` : ''}<div class="grow"><h1>${esc(title)}</h1>${sub ? `<p>${esc(sub)}</p>` : ''}</div>${extra}</div>`;
-const NAV_CO = [['home','Início','home'],['materiais','Materiais','box'],['solicitacoes','Solicitações','msg'],['mapa','Mapa','pin'],['perfil','Perfil','user']];
-const NAV_US = [['home','Início','home'],['empresas','Empresas','building'],['mapa','Mapa','pin'],['favoritos','Favoritos','heart'],['perfil','Perfil','user']];
-function shell(active, inner) {
-  const nav = isCo() ? NAV_CO : NAV_US;
-  const side = nav.map(([r, l, i]) => `<a class="nav-link ${active === r ? 'on' : ''}" href="#/${r}">${ic(i)} ${l}</a>`).join('');
-  const bn = isCo() ? NAV_CO : [NAV_US[0], NAV_US[1], NAV_US[2], NAV_US[4]];
-  const items = bn.map(([r, l, i]) => `<a class="${active === r ? 'on' : ''}" href="#/${r}">${ic(i, 22)}<span>${l}</span></a>`);
-  const mid = 2;
-  const cells = [...items.slice(0, mid), `<a class="fab" href="#/novo" aria-label="Cadastrar material">${ic('plus', 26)}</a>`, ...items.slice(mid)];
-  return `<div class="shell">
-    <aside class="side">
-      <a href="#/home" aria-label="Início">${logo('md')}</a>
-      <nav>${side}</nav>
-      <a class="btn btn-primary add" href="#/novo">${ic('plus')} Cadastrar material</a>
-      <div class="me" data-go="perfil"><span class="avatar sm">${esc(initials(displayName()))}</span><div><b>${esc(displayName())}</b><span>${isCo() ? 'Conta empresa' : 'Conta usuário'}</span></div></div>
-    </aside>
-    <div class="main-col">
-      <header class="top"><a href="#/home">${logo('md')}</a><span class="spacer"></span><button class="icon-btn" data-act="bell" aria-label="Notificações">${ic('bell')}</button></header>
-      <main class="view" id="view">${inner}</main>
-    </div>
-    <nav class="bottom" style="grid-template-columns:repeat(${cells.length},1fr)" aria-label="Navegação principal">${cells.join('')}</nav>
-  </div>`;
+:root{
+  --g900:#0d4d24; --g800:#115c2b; --g700:#16722f; --g600:#1b7a3a; --g500:#2e9a4f;
+  --g200:#cfe8d4; --g100:#e3f2e5; --g50:#f1f8f2;
+  --bg:#eaf4ec; --card:#fff; --ink:#1c2b21; --muted:#6b7c70; --line:#dbe7de;
+  --amber:#e8a13a; --blue:#2f7df6; --danger:#d64545;
+  --r:16px; --shadow:0 4px 18px rgba(20,70,35,.08);
+  --side:264px; --bottom:68px;
 }
-function authShell(card) {
-  return `<div class="auth">
-    <section class="auth-hero">
-      <span class="leaf a">${ic('leaf', 360)}</span><span class="leaf b">${ic('leaf', 260)}</span>
-      ${logo('xl', true)}
-      <p>Conectando pessoas, empresas e um futuro mais sustentável.</p>
-      <ul>
-        <li>${ic('gift')} Doe ou venda materiais recicláveis</li>
-        <li>${ic('pin')} Encontre empresas parceiras perto de você</li>
-        <li>${ic('msg')} Converse e combine a coleta pelo chat</li>
-      </ul>
-    </section>
-    <section class="auth-main"><div class="auth-card"><div class="m-logo">${logo('lg')}</div>${card}</div></section>
-  </div>`;
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'Nunito',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--bg);line-height:1.4;min-height:100vh}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+a{color:var(--g600);text-decoration:none;font-weight:700}
+h1,h2,h3{line-height:1.2}
+.ic{flex:none;vertical-align:middle}
+.muted{color:var(--muted);font-size:.9rem}
+.hide{display:none!important}
+
+.logo{display:inline-flex;align-items:center;gap:8px;font-weight:900;color:var(--g600);letter-spacing:-.5px}
+.logo-mark{display:grid;place-items:center;width:1.5em;height:1.5em;border-radius:50%;background:var(--g600);color:#fff}
+.logo-text{display:flex;flex-direction:column;line-height:.9}
+.logo-text b{font-size:1em;font-weight:900}
+.logo-text b+b{font-size:1em;margin-left:.7em}
+.logo.light{color:#fff}
+.logo.light .logo-mark{background:#fff;color:var(--g700)}
+.logo.xl{font-size:2.4rem}
+.logo.lg{font-size:1.9rem}
+.logo.md{font-size:1.3rem}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 20px;border-radius:12px;font-weight:800;transition:.15s;border:2px solid transparent;width:100%}
+.btn-primary{background:var(--g600);color:#fff}
+.btn-primary:hover{background:var(--g700)}
+.btn-outline{background:#fff;border-color:var(--g600);color:var(--g600)}
+.btn-outline:hover{background:var(--g50)}
+.btn-ghost{background:#fff;border:1px solid var(--line);color:var(--ink);font-weight:700}
+.btn-ghost:hover{background:var(--g50)}
+.btn-sm{padding:8px 14px;font-size:.85rem;border-radius:10px;width:auto}
+.icon-btn{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#fff;border:1px solid var(--line);color:var(--g700)}
+.icon-btn:hover{background:var(--g50)}
+.icon-btn.danger{color:var(--danger)}
+.link{background:none;color:var(--g600);font-weight:800;font-size:.9rem}
+
+.field{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:0 14px;transition:.15s;margin-bottom:12px;min-height:50px}
+.field:focus-within{border-color:var(--g500);box-shadow:0 0 0 3px rgba(46,154,79,.15)}
+.field .ic{color:var(--muted)}
+.field input,.field select,.field textarea{flex:1;border:0;outline:0;background:transparent;padding:13px 0;min-width:0}
+.field textarea{resize:vertical;min-height:70px}
+.field.sel select{appearance:none;-webkit-appearance:none}
+.lbl{display:block;font-weight:800;font-size:.9rem;margin:14px 0 6px}
+.lbl small{font-weight:600;color:var(--muted)}
+.divider{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:.85rem;margin:14px 0}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
+.social{display:flex;flex-direction:column;gap:10px}
+.social .btn{font-weight:700}
+.err{color:var(--danger);font-size:.85rem;font-weight:700;min-height:1.2em;margin-bottom:8px}
+
+.seg{display:flex;background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:4px;gap:4px;margin-bottom:16px}
+.seg button{flex:1;padding:10px;border-radius:999px;font-weight:800;color:var(--g700)}
+.seg button.on{background:var(--g600);color:#fff}
+
+
+.auth{min-height:100vh;display:grid;grid-template-columns:1.05fr 1fr}
+.auth-hero{position:relative;overflow:hidden;color:#fff;display:flex;flex-direction:column;justify-content:center;gap:18px;padding:56px;
+  background:radial-gradient(circle at 20% 15%,#2e9a4f 0,transparent 45%),radial-gradient(circle at 85% 90%,#0d4d24 0,transparent 55%),linear-gradient(160deg,#115c2b,#0a3b1b)}
+.auth-hero .logo{font-size:3rem}
+.auth-hero p{font-size:1.25rem;max-width:420px;opacity:.95;font-weight:600}
+.auth-hero .leaf{position:absolute;color:rgba(255,255,255,.08)}
+.auth-hero .leaf.a{right:-60px;bottom:-60px;transform:rotate(-20deg)}
+.auth-hero .leaf.b{left:-50px;top:-40px;transform:rotate(130deg)}
+.auth-hero ul{list-style:none;display:grid;gap:10px;margin-top:10px}
+.auth-hero li{display:flex;gap:10px;align-items:center;font-weight:700}
+.auth-hero li .ic{background:rgba(255,255,255,.18);border-radius:50%;padding:6px;width:32px;height:32px}
+.auth-main{display:grid;place-items:center;padding:32px 20px;background:linear-gradient(180deg,#f3faf4,#e6f2e8)}
+.auth-card{width:100%;max-width:440px}
+.auth-card .m-logo{display:none;text-align:center;margin-bottom:10px}
+.auth-card h1{font-size:1.7rem;color:var(--g800);margin-bottom:4px}
+.auth-card .sub{color:var(--muted);margin-bottom:18px}
+.auth-foot{text-align:center;margin-top:18px;font-size:.92rem;color:var(--muted)}
+.fine{font-size:.78rem;color:var(--muted);text-align:center;margin-top:12px}
+.fine.lock{display:flex;gap:6px;justify-content:center;align-items:center}
+
+
+.shell{min-height:100vh;display:grid;grid-template-columns:var(--side) 1fr}
+.side{position:sticky;top:0;height:100vh;background:#fff;border-right:1px solid var(--line);padding:22px 16px;display:flex;flex-direction:column;gap:6px}
+.side .logo{margin:0 8px 18px}
+.side nav{display:flex;flex-direction:column;gap:4px}
+.nav-link{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;font-weight:700;color:#3b4d41}
+.nav-link:hover{background:var(--g50)}
+.nav-link.on{background:var(--g100);color:var(--g700)}
+.side .add{margin-top:14px}
+.side .me{margin-top:auto;display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;background:var(--g50);cursor:pointer}
+.side .me b{display:block;font-size:.95rem}
+.side .me span{font-size:.78rem;color:var(--muted)}
+.main-col{min-width:0;display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;align-items:center;padding:14px 28px;position:sticky;top:0;z-index:20;background:rgba(234,244,236,.9);backdrop-filter:blur(8px)}
+.top .logo{display:none}
+.top .spacer{flex:1}
+.view{width:100%;max-width:1120px;margin:0 auto;padding:8px 28px 48px}
+.bottom{display:none}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--g500),var(--g800));color:#fff;display:grid;place-items:center;font-weight:900;flex:none}
+.avatar.lg{width:84px;height:84px;font-size:1.9rem}
+.avatar.sm{width:36px;height:36px;font-size:.9rem}
+
+.page-head{display:flex;align-items:center;gap:12px;margin:6px 0 18px}
+.page-head h1{font-size:1.7rem;color:var(--g800)}
+.page-head p{color:var(--muted)}
+.page-head .grow{flex:1}
+.back{width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid var(--line);display:grid;place-items:center;color:var(--g700);flex:none}
+.sec-head{display:flex;justify-content:space-between;align-items:center;margin:26px 0 12px}
+.sec-head h2{font-size:1.15rem}
+
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:18px}
+.grid{display:grid;gap:16px}
+.grid.c3{grid-template-columns:repeat(3,1fr)}
+.grid.auto{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.stat{text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
+.stat .ic{color:var(--g600);width:34px;height:34px}
+.stat b{font-size:2rem;color:var(--g800);line-height:1}
+.stat span{font-size:.85rem;color:var(--muted);font-weight:600}
+.hero-row{display:flex;gap:12px;margin:18px 0 4px}
+.hero-row .btn{width:auto;flex:1;max-width:320px}
+
+.chips{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:64px;padding:10px 12px;border-radius:16px;background:#fff;border:1.5px solid var(--line);font-size:.78rem;font-weight:700;color:var(--g700);flex:none}
+.chip .e{font-size:1.3rem;line-height:1}
+.chip.on{background:var(--g600);border-color:var(--g600);color:#fff}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;background:var(--g100);color:var(--g700);font-size:.72rem;font-weight:800}
+.tag{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.72rem;font-weight:800}
+.tag.don{background:#e1f3e6;color:var(--g700)}
+.tag.ven{background:#fdeed6;color:#b8741a}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800}
+.status::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--g500)}
+.status.off{color:var(--muted)}
+.status.off::before{background:#aab5ad}
+
+.search-row{display:flex;gap:10px;margin-bottom:12px}
+.search-row .field{flex:1;margin:0}
+.co{display:flex;flex-direction:column;gap:10px;transition:.15s}
+.co:hover{transform:translateY(-2px)}
+.co-top{display:flex;gap:12px;align-items:center}
+.co-logo{width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,var(--g500),var(--g700));color:#fff;display:grid;place-items:center;flex:none}
+.co-top h3{font-size:1.05rem}
+.co-top .go{margin-left:auto;color:var(--muted)}
+.co-tags{display:flex;gap:6px;flex-wrap:wrap}
+.co-foot{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.co-foot .muted{font-size:.82rem}
+.empty{text-align:center;color:var(--muted);padding:40px 10px}
+.layout-2{display:grid;grid-template-columns:270px 1fr;gap:20px;align-items:start}
+.filters h3{margin-bottom:6px}
+.check{display:flex;align-items:center;gap:10px;padding:9px 6px;border-radius:10px;cursor:pointer;font-weight:700}
+.check:hover{background:var(--g50)}
+.check input{accent-color:var(--g600);width:18px;height:18px}
+.range{width:100%;accent-color:var(--g600)}
+.range-top{display:flex;justify-content:space-between;font-weight:800;font-size:.9rem}
+.filter-toggle{display:none}
+
+.mat-card{display:grid;grid-template-columns:84px 1fr auto;gap:14px;align-items:center;background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:12px}
+.mat-card.off{opacity:.65}
+.thumb{width:84px;height:84px;border-radius:14px;display:grid;place-items:center;font-size:2.4rem;background:linear-gradient(135deg,#dff0e3,#bfe0c7)}
+.t-Metal{background:linear-gradient(135deg,#e6e9ee,#c4ccd6)}
+.t-Papel{background:linear-gradient(135deg,#f5e6cf,#e3c79c)}
+.t-Vidro{background:linear-gradient(135deg,#dff3f3,#b5e0e2)}
+.t-Eletrônico{background:linear-gradient(135deg,#e8e4f4,#cbc2e6)}
+.mat-info h3{font-size:1.05rem}
+.mat-info .price{font-weight:900;color:var(--g800)}
+.mat-info>*{margin-bottom:2px}
+.mat-actions{display:flex;flex-direction:column;gap:8px}
+
+.form-card{max-width:640px}
+.type-list{border:1.5px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.type-list label{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line);cursor:pointer;font-weight:700}
+.type-list label:last-child{border-bottom:0}
+.type-list label:hover{background:var(--g50)}
+.type-list input{margin-left:auto;accent-color:var(--g600);width:20px;height:20px}
+.type-list .e{font-size:1.2rem;width:26px;text-align:center}
+.seg2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg2 button{padding:12px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-weight:800;color:var(--g700)}
+.seg2 button.on{background:var(--g600);border-color:var(--g600);color:#fff}
+
+.req{display:flex;flex-direction:column;gap:12px}
+.req-top{display:flex;gap:12px;align-items:center}
+.req-top h3{font-size:1.05rem}
+.req-top .go{margin-left:auto;color:var(--muted)}
+.req-meta{font-size:.85rem;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.req-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.loc-card{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center}
+
+.map{position:relative;border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);height:min(68vh,560px);min-height:380px;
+  background:
+   linear-gradient(115deg,transparent 46%,#fff 46%,#fff 48%,transparent 48%),
+   linear-gradient(20deg,transparent 60%,#fff 60%,#fff 62%,transparent 62%),
+   linear-gradient(90deg,rgba(255,255,255,.55) 1px,transparent 1px) 0 0/60px 60px,
+   linear-gradient(0deg,rgba(255,255,255,.55) 1px,transparent 1px) 0 0/60px 60px,
+   radial-gradient(circle at 30% 70%,#cfe9c9 0,transparent 25%),radial-gradient(circle at 75% 25%,#cfe9c9 0,transparent 20%),#e4efe2}
+.map-label{position:absolute;font-weight:800;color:#5c7a64;font-size:.85rem;pointer-events:none}
+.pin{position:absolute;transform:translate(-50%,-100%);width:34px;height:34px;border-radius:50% 50% 50% 0;rotate:-45deg;background:var(--g600);display:grid;place-items:center;color:#fff;border:2px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.25)}
+.pin>*{rotate:45deg}
+.pin.on{background:var(--g900);scale:1.2;z-index:3}
+.me-dot{position:absolute;width:18px;height:18px;border-radius:50%;background:var(--blue);border:3px solid #fff;box-shadow:0 0 0 10px rgba(47,125,246,.2);transform:translate(-50%,-50%)}
+.map-card{position:absolute;left:16px;right:16px;bottom:16px;max-width:420px;background:#fff;border-radius:16px;padding:14px;box-shadow:0 8px 24px rgba(0,0,0,.18);display:flex;flex-direction:column;gap:10px}
+.map-search{position:absolute;top:14px;left:14px;right:14px;max-width:420px}
+.map-search .field{margin:0;box-shadow:var(--shadow)}
+
+.detail{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;align-items:start}
+.banner{height:220px;border-radius:var(--r);display:grid;place-items:center;font-size:5rem;color:#fff;background:linear-gradient(135deg,#2e9a4f,#0d4d24);position:relative;overflow:hidden}
+.banner.mat{background:linear-gradient(135deg,#dff0e3,#9fcfab);color:inherit}
+.info-list{list-style:none;display:grid;gap:12px;margin:14px 0}
+.info-list li{display:flex;gap:12px;align-items:center}
+.info-list .ic{color:var(--g600)}
+.mat-row{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;background:#fff;border:1px solid var(--line);margin-bottom:10px;cursor:pointer;transition:.15s}
+.mat-row:hover{background:var(--g50)}
+.mat-row .e{font-size:1.5rem;width:44px;height:44px;display:grid;place-items:center;border-radius:12px;background:var(--g100)}
+.mat-row div{flex:1}
+.mat-row small{color:var(--muted);display:block}
+.rating{color:var(--amber);font-weight:800}
+.fav-btn.on{color:var(--danger)}
+.fav-btn.on svg{fill:var(--danger)}
+
+.chat{display:flex;flex-direction:column;height:calc(100vh - 150px);min-height:420px;background:#fff;border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;max-width:760px}
+.chat-head{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.chat-head small{color:var(--g500);font-weight:800;display:block}
+.chat-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#f6faf6}
+.bubble{max-width:78%;padding:10px 14px;border-radius:16px;font-size:.95rem;position:relative}
+.bubble time{display:block;font-size:.7rem;opacity:.7;text-align:right;margin-top:2px}
+.bubble.me{align-self:flex-end;background:var(--g600);color:#fff;border-bottom-right-radius:4px}
+.bubble.them{align-self:flex-start;background:#fff;border:1px solid var(--line);border-bottom-left-radius:4px}
+.chat-input{display:flex;gap:10px;padding:12px;border-top:1px solid var(--line);align-items:center}
+.chat-input input{flex:1;border:1.5px solid var(--line);border-radius:999px;padding:12px 16px;outline:0}
+.chat-input input:focus{border-color:var(--g500)}
+.send{width:44px;height:44px;border-radius:50%;background:var(--g600);color:#fff;display:grid;place-items:center}
+
+.profile-head{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+.profile-head h2{font-size:1.4rem}
+.menu{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;max-width:640px}
+.menu button,.menu a{display:flex;align-items:center;gap:14px;width:100%;padding:16px 18px;border-bottom:1px solid var(--line);font-weight:700;color:var(--ink);text-align:left}
+.menu button:hover,.menu a:hover{background:var(--g50)}
+.menu .ic:first-child{color:var(--g600)}
+.menu .ic:last-child{margin-left:auto;color:var(--muted)}
+.menu>*:last-child{border-bottom:0}
+
+/* ---------- toast ---------- */
+.toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,20px);background:#143d22;color:#fff;padding:12px 20px;border-radius:999px;font-weight:700;opacity:0;pointer-events:none;transition:.25s;z-index:100;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+
+@media (max-width:1000px){
+  .detail{grid-template-columns:1fr}
+  .layout-2{grid-template-columns:1fr}
+  .filter-toggle{display:inline-flex}
+  .filters{display:none}
+  .filters.open{display:block}
 }
-const pwField = (name, ph, ac = 'current-password') =>
-  `<label class="field">${ic('lock')}<input type="password" name="${name}" placeholder="${ph}" autocomplete="${ac}" required minlength="${name === 'senha' || name === 'senha2' ? 8 : 1}"><button type="button" data-act="toggle-pw" aria-label="Mostrar senha">${ic('eye')}</button></label>`;
-function viewLogin() {
-  const co = ui.loginRole === 'empresa';
-  return authShell(`
-    <h1>Entrar</h1><p class="sub">Conectando pessoas, empresas e um futuro mais sustentável.</p>
-    <div class="seg"><button type="button" class="${co ? '' : 'on'}" data-act="login-role" data-v="usuario">Sou usuário</button><button type="button" class="${co ? 'on' : ''}" data-act="login-role" data-v="empresa">Sou empresa</button></div>
-    <form data-form="login" novalidate>
-      <label class="field">${ic('mail')}<input name="email" type="text" placeholder="${co ? 'E-mail ou CNPJ' : 'E-mail ou usuário'}" autocomplete="username" required></label>
-      ${pwField('senha', 'Senha')}
-      <div class="err" id="err"></div>
-      <button class="btn btn-primary" type="submit">Entrar ${ic('arrow')}</button>
-    </form>
-    <p class="auth-foot"><button class="link" data-act="forgot">Esqueceu sua senha?</button></p>
-    <div class="divider">ou</div>
-    <div class="social">
-      <button class="btn btn-ghost" data-act="social"><b style="color:#4285f4">G</b> Continuar com o Google</button>
-      <button class="btn btn-ghost" data-act="social"><b>&#63743;</b> Continuar com a Apple</button>
-    </div>
-    <p class="auth-foot">Não tem uma conta? <a href="#/cadastro">Cadastre-se</a></p>`);
+@media (max-width:860px){
+  .auth{grid-template-columns:1fr}
+  .auth-hero{display:none}
+  .auth-card .m-logo{display:block}
+  .auth-main{align-items:start;padding-top:36px}
+
+  .shell{grid-template-columns:1fr;padding-bottom:calc(var(--bottom) + 14px)}
+  .side{display:none}
+  .top{padding:12px 16px}
+  .top .logo{display:inline-flex}
+  .top .who{display:none}
+  .view{padding:4px 16px 32px}
+  .page-head h1{font-size:1.35rem}
+  .grid.c3{gap:8px}
+  .grid.c3 .card{padding:12px 6px}
+  .stat b{font-size:1.6rem}
+  .stat span{font-size:.72rem}
+  .hero-row{flex-direction:column}
+  .hero-row .btn{max-width:none}
+  .grid.auto{grid-template-columns:1fr}
+  .mat-card{grid-template-columns:72px 1fr auto}
+  .thumb{width:72px;height:72px;font-size:2rem}
+  .chat{height:calc(100vh - 170px)}
+  .loc-card{grid-template-columns:110px 1fr}
+  .desk-only{display:none!important}
+
+  .bottom{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;height:var(--bottom);background:#fff;border-top:1px solid var(--line);z-index:30;padding:0 4px env(safe-area-inset-bottom);align-items:center;box-shadow:0 -4px 16px rgba(20,70,35,.06)}
+  .bottom a{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.68rem;font-weight:700;color:#7d8c82;padding:6px 0}
+  .bottom a.on{color:var(--g600)}
+  .fab{width:56px;height:56px;border-radius:50%;background:var(--g600);color:#fff!important;display:grid!important;place-items:center;margin:-26px auto 0;box-shadow:0 6px 16px rgba(27,122,58,.45);border:4px solid #fff}
 }
-function viewCadastro() {
-  const co = ui.signup === 'empresa';
-  const form = co ? `
-      <label class="field">${ic('building')}<input name="razao" placeholder="Razão social / Nome da empresa" required></label>
-      <label class="field">${ic('list')}<input name="cnpj" placeholder="CNPJ  00.000.000/0000-00" inputmode="numeric" maxlength="18" required></label>
-      <label class="field">${ic('mail')}<input name="email" type="email" placeholder="E-mail corporativo" required></label>
-      ${pwField('senha', 'Senha (mínimo de 8 caracteres)', 'new-password')}
-      <label class="field">${ic('phone')}<input name="tel" type="tel" placeholder="Telefone (11) 98765-4321" required></label>
-      <label class="field">${ic('pin')}<input name="end" placeholder="Localização / Endereço" required></label>
-      <div class="err" id="err"></div>
-      <button class="btn btn-primary" type="submit">Cadastrar empresa ${ic('arrow')}</button>
-      <p class="fine lock">${ic('lock', 14)} Seus dados estão seguros e serão usados apenas para o funcionamento do app.</p>` : `
-      <label class="field">${ic('user')}<input name="nome" placeholder="Nome completo" required></label>
-      <label class="field">${ic('mail')}<input name="email" type="email" placeholder="E-mail" required></label>
-      ${pwField('senha', 'Senha (mínimo de 8 caracteres)', 'new-password')}
-      ${pwField('senha2', 'Confirmar senha', 'new-password')}
-      <div class="err" id="err"></div>
-      <button class="btn btn-primary" type="submit">Cadastrar ${ic('arrow')}</button>
-      <p class="fine">Ao se cadastrar, você concorda com nossos <a href="#/cadastro" data-act="terms">Termos de Uso</a> e <a href="#/cadastro" data-act="terms">Política de Privacidade</a>.</p>`;
-  return authShell(`
-    <h1>${co ? 'Cadastro da empresa' : 'Criar conta'}</h1><p class="sub">${co ? 'Preencha os dados da sua empresa para começar a ofertar materiais.' : 'Crie sua conta para doar, vender e encontrar materiais.'}</p>
-    <div class="seg"><button type="button" class="${co ? '' : 'on'}" data-act="signup-role" data-v="usuario">Sou usuário</button><button type="button" class="${co ? 'on' : ''}" data-act="signup-role" data-v="empresa">Sou empresa</button></div>
-    <form data-form="${co ? 'cad-empresa' : 'cad-usuario'}" novalidate>${form}</form>
-    <p class="auth-foot">Já tem uma conta? <a href="#/login">Entrar</a></p>`);
+@media (max-width:480px){
+  .map{height:62vh}
+  .map-card{left:10px;right:10px}
+  .req-actions{grid-template-columns:1fr 1fr}
 }
-function viewHome() {
-  return isCo() ? homeEmpresa() : homeUsuario();
-}
-function homeEmpresa() {
-  const mats = S.myMaterials, act = mats.filter(m => m.active);
-  const news = S.requests.filter(r => r.status === 'nova').length;
-  const feat = act.slice(0, 3).map(matCard).join('') || '<div class="empty">Você ainda não cadastrou materiais.</div>';
-  return `
-    <div class="page-head"><div class="grow"><h1>Olá, ${esc(firstName())}! ${ic('leaf', 26)}</h1><p>Juntos por um futuro mais sustentável!</p></div></div>
-    <div class="grid c3">
-      <div class="card stat">${ic('refresh', 34)}<b>${mats.length}</b><span>Materiais cadastrados</span></div>
-      <div class="card stat">${ic('gift', 34)}<b>${act.length}</b><span>Doações/vendas ativas</span></div>
-      <div class="card stat">${ic('msg', 34)}<b>${news}</b><span>Solicitações recebidas</span></div>
-    </div>
-    <div class="hero-row"><a class="btn btn-primary" href="#/novo">${ic('plus')} Cadastrar material</a><a class="btn btn-outline" href="#/materiais">${ic('list')} Gerenciar materiais</a></div>
-    <div class="sec-head"><h2>Materiais em destaque</h2><a href="#/materiais">Ver todos ›</a></div>
-    <div class="grid auto">${feat}</div>`;
-}
-function homeUsuario() {
-  const chips = [{ k:'Todos', e:'⊞' }, ...TYPES].map(t => `<button class="chip ${ui.chip === t.k ? 'on' : ''}" data-act="chip" data-v="${t.k}"><span class="e">${t.e}</span>${t.k}</button>`).join('');
-  return `
-    <div class="page-head"><div class="grow"><h1>Olá, ${esc(firstName())}! 👋</h1><p>Vamos juntos por um futuro mais sustentável!</p></div></div>
-    <div class="search-row"><label class="field">${ic('search')}<input id="q" type="search" placeholder="Buscar materiais, empresas, cidade..." value="${esc(ui.q)}"></label><button class="icon-btn" style="width:50px;height:50px" data-go="empresas" aria-label="Filtros">${ic('sliders')}</button></div>
-    <div class="chips">${chips}</div>
-    <div class="sec-head"><h2>Empresas próximas</h2><a href="#/empresas">Ver todas ›</a></div>
-    <div class="grid auto" id="clist">${companyCards(filteredCos(false).slice(0, 6))}</div>`;
-}
-function filteredCos(useFilters = true) {
-  const q = norm(ui.q);
-  return COMPANIES.filter(c => {
-    if (q && !norm(c.name + ' ' + c.city + ' ' + coTypes(c).join(' ')).includes(q)) return false;
-    if (ui.chip !== 'Todos' && !coTypes(c).includes(ui.chip)) return false;
-    if (useFilters) {
-      const f = S.filters;
-      if (f.types.length && !f.types.some(t => coTypes(c).includes(t))) return false;
-      if (c.km > f.dist) return false;
-      if (f.city && c.city !== f.city) return false;
-    }
-    return true;
-  });
-}
-function companyCards(list) {
-  if (!list.length) return '<div class="empty" style="grid-column:1/-1">Nenhuma empresa encontrada com esses critérios.</div>';
-  return list.map(c => `<article class="card co">
-    <div class="co-top"><span class="co-logo">${ic('leaf', 26)}</span><div><h3>${esc(c.name)}</h3><span class="muted">${c.km.toFixed(1).replace('.', ',')} km • ${esc(c.city)} - ${c.uf}</span></div><span class="go">${ic('right')}</span></div>
-    <div class="co-tags">${coTypes(c).map(t => `<span class="pill">${t}</span>`).join('')}</div>
-    <div class="co-foot"><span class="muted">A partir de ${c.min} kg</span><button class="btn btn-primary btn-sm" data-go="empresa/${c.id}">Ver detalhes ${ic('arrow', 14)}</button></div>
-  </article>`).join('');
-}
-function viewEmpresas() {
-  const f = S.filters;
-  const cities = [...new Set(COMPANIES.map(c => c.city))];
-  const chips = [{ k:'Todos', e:'⊞' }, ...TYPES].map(t => `<button class="chip ${ui.chip === t.k ? 'on' : ''}" data-act="chip" data-v="${t.k}"><span class="e">${t.e}</span>${t.k}</button>`).join('');
-  return `${pageHead('Empresas', 'Encontre quem recebe o seu material', null, `<button class="btn btn-ghost btn-sm filter-toggle" data-act="toggle-filters">${ic('sliders', 16)} Filtros</button>`)}
-    <div class="search-row"><label class="field">${ic('search')}<input id="q" type="search" placeholder="Buscar materiais, empresas, cidade..." value="${esc(ui.q)}"></label></div>
-    <div class="layout-2">
-      <aside class="card filters" id="filters">
-        <h3>Tipo de material</h3>
-        ${TYPES.map(t => `<label class="check"><span>${t.e}</span><span style="flex:1">${t.k}</span><input type="checkbox" data-filter="type" value="${t.k}" ${f.types.includes(t.k) ? 'checked' : ''}></label>`).join('')}
-        <div class="range-top" style="margin-top:16px"><span>Distância</span><span id="distv">Até ${f.dist} km</span></div>
-        <input class="range" type="range" min="1" max="50" value="${f.dist}" data-filter="dist">
-        <label class="lbl">Estado</label>
-        <label class="field sel"><select data-filter="uf"><option>Todos os estados</option><option>SP</option></select></label>
-        <label class="lbl">Cidade</label>
-        <label class="field sel"><select data-filter="city"><option value="">Todas as cidades</option>${cities.map(c => `<option ${f.city === c ? 'selected' : ''}>${c}</option>`).join('')}</select></label>
-        <button class="btn btn-outline btn-sm" style="width:100%;margin-top:6px" data-act="clear-filters">Limpar filtros</button>
-      </aside>
-      <div><div class="chips">${chips}</div><div class="grid auto" id="clist" style="margin-top:6px">${companyCards(filteredCos(true))}</div></div>
-    </div>`;
-}
-function matCard(m) {
-  return `<article class="mat-card ${m.active ? '' : 'off'}">
-    <div class="thumb t-${m.type}">${emoji(m.type)}</div>
-    <div class="mat-info"><h3>${esc(m.name)}</h3>
-      <span class="tag ${m.mode === 'Doar' ? 'don' : 'ven'}">${m.mode === 'Doar' ? 'Doação' : 'Venda'}</span>
-      ${m.mode === 'Vender' && m.price ? `<p class="price">${money(m.price)}/kg</p>` : ''}
-      <p class="muted">${m.kg} kg disponíveis</p>
-      <span class="status ${m.active ? '' : 'off'}">${m.active ? 'Ativo' : 'Pausado'}</span></div>
-    <div class="mat-actions">
-      <button class="icon-btn" data-act="toggle-mat" data-id="${m.id}" title="${m.active ? 'Pausar' : 'Ativar'}" aria-label="${m.active ? 'Pausar' : 'Ativar'}">${ic(m.active ? 'pause' : 'play', 16)}</button>
-      <button class="icon-btn danger" data-act="del-mat" data-id="${m.id}" title="Excluir" aria-label="Excluir">${ic('trash', 16)}</button>
-    </div></article>`;
-}
-function viewMateriais() {
-  const title = isCo() ? 'Meus materiais' : 'Minhas doações / vendas';
-  const list = S.myMaterials.map(matCard).join('') || `<div class="empty card" style="grid-column:1/-1">Nada por aqui ainda.<br><br><a class="btn btn-primary btn-sm" href="#/novo">${ic('plus', 16)} Cadastrar material</a></div>`;
-  return `${pageHead(title, 'Materiais recicláveis que você está oferecendo.', isCo() ? null : 'perfil', `<a class="btn btn-primary btn-sm desk-only" href="#/novo">${ic('plus', 16)} Novo</a>`)}<div class="grid auto">${list}</div>`;
-}
-let formMode = 'Doar';
-function viewNovo() {
-  formMode = 'Doar';
-  return `${pageHead('Cadastrar material', 'Informe os dados do material que deseja oferecer.', 'home')}
-  <form class="card form-card" data-form="novo" novalidate>
-    <span class="lbl" style="margin-top:0">Tipo de material</span>
-    <div class="type-list">${TYPES.map((t, i) => `<label><span class="e">${t.e}</span><span>${t.k}</span><input type="radio" name="type" value="${t.k}" ${i === 0 ? 'checked' : ''}></label>`).join('')}</div>
-    <label class="lbl">Quantidade (kg)</label>
-    <label class="field"><input name="kg" type="number" min="1" step="any" inputmode="decimal" placeholder="Ex: 50" required></label>
-    <span class="lbl">Modalidade</span>
-    <div class="seg2"><button type="button" class="on" data-act="mode" data-v="Doar">Doar</button><button type="button" data-act="mode" data-v="Vender">Vender</button></div>
-    <div id="price-wrap" class="hide"><label class="lbl">Preço por kg <small>(opcional)</small></label>
-      <label class="field"><input name="price" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Ex: R$ 1,20"></label></div>
-    <label class="lbl">Descrição <small>(opcional)</small></label>
-    <label class="field"><textarea name="desc" placeholder="Ex: Garrafas PET transparentes, limpas..."></textarea></label>
-    <label class="lbl">Localização</label>
-    <label class="field sel">${ic('pin', 18)}<select name="loc"><option>Usar minha localização atual</option><option>Informar outro endereço</option></select></label>
-    <div class="err" id="err"></div>
-    <button class="btn btn-primary" type="submit">Publicar material ${ic('arrow')}</button>
-  </form>`;
-}
-function viewSolicitacoes() {
-  const list = S.requests.filter(r => ui.tab === 'novas' ? r.status === 'nova' : r.status === 'andamento');
-  const cards = list.map(r => `<article class="card req">
-    <div class="req-top"><span class="avatar">${esc(initials(r.name))}</span><div><h3>${esc(r.name)}</h3><div class="req-meta"><span>${esc(r.mat)}</span>•<span>${r.kg} kg</span>•<span>${r.km.toString().replace('.', ',')} km</span></div></div></div>
-    <div class="req-meta">${ic('pin', 14)} ${esc(r.place)}</div>
-    <div class="req-actions">
-      ${r.status === 'nova' ? `<button class="btn btn-primary btn-sm" data-act="accept" data-id="${r.id}">Aceitar</button>` : `<button class="btn btn-outline btn-sm" data-act="finish" data-id="${r.id}">${ic('check', 16)} Concluir</button>`}
-      <button class="btn btn-outline btn-sm" data-go="chat/r${r.id}">${ic('msg', 16)} Conversar</button>
-    </div></article>`).join('') || `<div class="empty card" style="grid-column:1/-1">${ui.tab === 'novas' ? 'Nenhuma solicitação nova.' : 'Nada em andamento no momento.'}</div>`;
-  return `${pageHead('Solicitações / interessados')}
-    <div class="seg" style="max-width:420px"><button class="${ui.tab === 'novas' ? 'on' : ''}" data-act="tab" data-v="novas">Novas (${S.requests.filter(r => r.status === 'nova').length})</button><button class="${ui.tab === 'andamento' ? 'on' : ''}" data-act="tab" data-v="andamento">Em andamento</button></div>
-    <div class="grid auto">${cards}</div>
-    <div class="sec-head"><h2>Localização da sua empresa</h2></div>
-    <div class="card loc-card"><div class="map" style="height:110px;min-height:0"><span class="pin" style="left:50%;top:75%"><span>${ic('leaf', 14)}</span></span></div>
-      <div><b>${esc(S.company)}</b><p class="muted">Rua Exemplo, 123<br>São Bernardo do Campo - SP</p><button class="btn btn-outline btn-sm" style="margin-top:8px" data-go="mapa">${ic('pin', 16)} Ver no mapa</button></div></div>`;
-}
-const LEAFLET_CSS = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-const LEAFLET_JS = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-const MAP_CSS = `
-.map-controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-.map-controls .btn{width:auto;flex:1 1 180px;max-width:260px}
-.real-map{position:relative;z-index:0;height:min(62vh,540px);min-height:360px;border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);background:#e4efe2}
-.map-info{margin-top:10px;font-size:.9rem;font-weight:600;color:var(--muted)}
-#map-company-details .map-card{position:static;max-width:420px;margin-top:12px;box-shadow:var(--shadow)}
-.mk{background:none;border:0}
-.mk-pin{display:grid;place-items:center;width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--g600);color:#fff;border:2px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.28)}
-.mk-pin svg{transform:rotate(45deg)}
-.mk-pin.on{background:var(--g900)}
-.mk-me{display:block;width:18px;height:18px;border-radius:50%;background:var(--blue);border:3px solid #fff;box-shadow:0 0 0 8px rgba(47,125,246,.22)}
-.leaflet-popup-content{font-family:inherit;font-weight:700}
-`;
-let mapInstance = null;
-let userMarker = null;
-let leafletPromise = null;
-function injectMapStyles() {
-  if ($('#map-styles')) return;
-  const style = document.createElement('style');
-  style.id = 'map-styles';
-  style.textContent = MAP_CSS;
-  document.head.appendChild(style);
-}
-function loadLeaflet() {
-  if (window.L) return Promise.resolve(window.L);
-  if (leafletPromise) return leafletPromise;
-  leafletPromise = new Promise((resolve, reject) => {
-    const css = document.createElement('link');
-    css.rel = 'stylesheet';
-    css.href = LEAFLET_CSS;
-    document.head.appendChild(css);
-    const js = document.createElement('script');
-    js.src = LEAFLET_JS;
-    js.onload = () => resolve(window.L);
-    js.onerror = () => { leafletPromise = null; reject(new Error('leaflet')); };
-    document.head.appendChild(js);
-  });
-  return leafletPromise;
-}
-function disposeMap() {
-  if (mapInstance) { try { mapInstance.remove(); } catch {} }
-  mapInstance = null;
-  userMarker = null;
-}
-function updateMapStatus(message) {
-  const status = $('#map-status');
-  if (status) status.textContent = message;
-}
-const companyIcon = (selected = false) => L.divIcon({
-  className: 'mk',
-  html: `<span class="mk-pin ${selected ? 'on' : ''}">${ic('leaf', 16)}</span>`,
-  iconSize: [34, 34],
-  iconAnchor: [17, 41],
-  popupAnchor: [0, -40]
-});
-const userIcon = () => L.divIcon({
-  className: 'mk',
-  html: '<span class="mk-me"></span>',
-  iconSize: [18, 18],
-  iconAnchor: [9, 9],
-  popupAnchor: [0, -12]
-});
-function showCompanyCard(company) {
-  ui.mapSel = company.id;
-  const details = $('#map-company-details');
-  if (details) details.innerHTML = mapCompanyCard(company);
-}
-function buildMap() {
-  const el = $('#real-map');
-  if (!el || route()[0] !== 'mapa') return;
-  disposeMap();
-  const saved = S.userLocation && Number.isFinite(Number(S.userLocation.lat)) && Number.isFinite(Number(S.userLocation.lng))
-    ? [Number(S.userLocation.lat), Number(S.userLocation.lng)]
-    : null;
-  mapInstance = L.map(el, { scrollWheelZoom: true });
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; Colaboradores do OpenStreetMap',
-    maxZoom: 19
-  }).addTo(mapInstance);
-  const points = [];
-  COMPANIES.forEach(company => {
-    const pos = [company.lat, company.lng];
-    points.push(pos);
-    L.marker(pos, { icon: companyIcon(ui.mapSel === company.id), title: company.name })
-      .addTo(mapInstance)
-      .bindPopup(`<strong>${esc(company.name)}</strong><br>${esc(company.city)} - ${esc(company.uf)}`)
-      .on('click', () => showCompanyCard(company));
-  });
-  if (saved) {
-    userMarker = L.marker(saved, { icon: userIcon(), title: 'Você está aqui', zIndexOffset: 1000 })
-      .addTo(mapInstance)
-      .bindPopup('Sua localização');
-    mapInstance.setView(saved, 14);
-    updateMapStatus('Sua localização está marcada no mapa.');
-  } else {
-    mapInstance.fitBounds(points, { padding: [40, 40] });
-    updateMapStatus('Toque em "Minha localização" para mostrar onde você está.');
-  }
-  const selected = coById(ui.mapSel);
-  if (selected) showCompanyCard(selected);
-  setTimeout(() => { if (mapInstance) mapInstance.invalidateSize(); }, 150);
-}
-function initializeMap() {
-  if (!$('#real-map')) return;
-  injectMapStyles();
-  updateMapStatus('Carregando mapa...');
-  loadLeaflet().then(buildMap, () => updateMapStatus('Não foi possível carregar o mapa. Verifique sua conexão com a internet.'));
-}
-function mapCompanyCard(company) {
-  return `<div class="map-card">
-    <div class="co-top"><span class="co-logo">${ic('leaf', 26)}</span><div><h3>${esc(company.name)}</h3><span class="muted">${esc(company.city)} - ${esc(company.uf)}</span></div></div>
-    <div class="co-tags">${coTypes(company).map(type => `<span class="pill">${type}</span>`).join('')}</div>
-    <button class="btn btn-primary btn-sm" style="width:100%" data-go="empresa/${company.id}">Ver detalhes</button>
-  </div>`;
-}
-function locateUser() {
-  if (!mapInstance) { toast('O mapa ainda está carregando. Tente de novo em instantes.'); return; }
-  if (!navigator.geolocation) { updateMapStatus('Seu navegador não oferece suporte à localização.'); toast('Seu navegador não oferece suporte à localização.'); return; }
-  updateMapStatus('Buscando sua localização...');
-  navigator.geolocation.getCurrentPosition(
-    position => {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-      S.userLocation = { lat, lng };
-      save();
-      if (!mapInstance) return;
-      if (userMarker) userMarker.setLatLng([lat, lng]);
-      else userMarker = L.marker([lat, lng], { icon: userIcon(), title: 'Você está aqui', zIndexOffset: 1000 }).addTo(mapInstance).bindPopup('Sua localização');
-      mapInstance.setView([lat, lng], 15);
-      userMarker.openPopup();
-      updateMapStatus('Sua localização foi encontrada e marcada no mapa.');
-      toast('Localização encontrada!');
-    },
-    error => {
-      const messages = {
-        1: ['Permissão de localização negada.', 'Permissão de localização negada. Clique no cadeado ao lado do endereço do site e permita a localização.'],
-        2: ['Localização indisponível.', 'Sua localização não está disponível no momento. Verifique se a localização do dispositivo está ligada.'],
-        3: ['A busca demorou demais.', 'A busca pela localização demorou demais. Tente novamente.']
-      };
-      const [short, long] = messages[error.code] || ['Não foi possível obter a localização.', 'Não foi possível obter sua localização.'];
-      updateMapStatus(long);
-      toast(short);
-    },
-    { enableHighAccuracy: false, timeout: 20000, maximumAge: 60000 }
-  );
-}
-function viewMapa() {
-  return `${pageHead('Empresas próximas', 'Visualize o mapa e encontre sua localização.')}
-    <div class="map-controls">
-      <button class="btn btn-primary" data-act="locate-me">${ic('pin')} Minha localização</button>
-      <button class="btn btn-outline" data-act="refresh-map">${ic('refresh')} Atualizar mapa</button>
-    </div>
-    <div id="real-map" class="real-map"></div>
-    <div class="map-info" id="map-status" role="status" aria-live="polite">Carregando mapa...</div>
-    <div id="map-company-details"></div>`;
-}
-function viewEmpresa(id) {
-  const c = coById(id); if (!c) return viewEmpresas();
-  const fav = S.favCos.includes(c.id);
-  const rows = c.mats.map((m, i) => `<div class="mat-row" data-go="material/${c.id}-${i}"><span class="e">${emoji(m.t)}</span><div><b>${m.t}</b><small>${m.kg} kg • ${money(m.price)}/kg</small></div>${ic('right')}</div>`).join('');
-  return `${pageHead('Detalhes da empresa', '', 'empresas', `<button class="icon-btn fav-btn ${fav ? 'on' : ''}" data-act="fav-co" data-id="${c.id}" aria-label="Favoritar">${ic('heart')}</button>`)}
-    <div class="detail"><div>
-      <div class="banner">${ic('leaf', 90)}</div>
-      <div class="card" style="margin-top:16px"><div class="co-top"><span class="co-logo">${ic('leaf', 26)}</span><div><h2>${esc(c.name)}</h2><span class="rating">★ ${c.rating.toString().replace('.', ',')}</span> <span class="muted">(${c.reviews} avaliações)</span></div></div>
-        <ul class="info-list"><li>${ic('pin')} ${c.km.toFixed(1).replace('.', ',')} km • ${esc(c.city)} - ${c.uf}</li><li>${ic('clock')} ${esc(c.hours)}</li></ul></div></div>
-      <div><div class="sec-head" style="margin-top:0"><h2>Materiais disponíveis</h2></div>${rows}
-        <button class="btn btn-primary" data-go="chat/${c.id}">${ic('msg')} Falar com a empresa</button></div></div>`;
-}
-function viewMaterial(key) {
-  const [cid, idx] = key.split('-'); const c = coById(cid); const m = c && c.mats[Number(idx)];
-  if (!m) return viewEmpresas();
-  const fav = S.favMats.includes(key);
-  return `${pageHead('Detalhes do material', '', `empresa/${c.id}`, `<button class="icon-btn fav-btn ${fav ? 'on' : ''}" data-act="fav-mat" data-id="${key}" aria-label="Favoritar">${ic('heart')}</button>`)}
-    <div class="detail"><div class="banner mat"><span style="font-size:6rem">${emoji(m.t)}</span></div>
-    <div class="card"><h2>${m.t}</h2><p class="muted">${esc(m.sub)}</p>
-      <div style="display:flex;gap:8px;margin:12px 0"><span class="pill">${m.kg} kg disponíveis</span><span class="pill">${money(m.price)}/kg</span></div>
-      <h3>Informações</h3>
-      <ul class="info-list"><li>${ic('box')} Tipo: ${esc(m.sub)}</li><li>${ic('list')} Quantidade mínima: ${c.min} kg</li><li>${ic('gift')} Pagamento: Dinheiro / Pix</li><li>${ic('pin')} Localização: ${esc(c.city)} - ${c.uf}</li></ul>
-      <button class="btn btn-primary" data-go="chat/${c.id}">${ic('msg')} Entrar em contato</button></div></div>`;
-}
-function viewFavoritos() {
-  const cos = S.favCos.map(coById).filter(Boolean).map(c => `<div class="mat-row" data-go="empresa/${c.id}"><span class="co-logo" style="width:44px;height:44px">${ic('leaf', 22)}</span><div><b>${esc(c.name)}</b><small>${c.km.toFixed(1).replace('.', ',')} km • ${esc(c.city)} - SP</small></div><button class="icon-btn fav-btn on" data-act="fav-co" data-id="${c.id}" aria-label="Remover">${ic('heart', 18)}</button></div>`).join('');
-  const mats = S.favMats.map(k => { const [cid, i] = k.split('-'); const c = coById(cid); const m = c && c.mats[i]; return m ? `<div class="mat-row" data-go="material/${k}"><span class="e">${emoji(m.t)}</span><div><b>${m.t} — ${esc(c.name)}</b><small>${m.kg} kg • ${money(m.price)}/kg</small></div><button class="icon-btn fav-btn on" data-act="fav-mat" data-id="${k}" aria-label="Remover">${ic('heart', 18)}</button></div>` : ''; }).join('');
-  const body = ui.favTab === 'empresas' ? cos : mats;
-  return `${pageHead('Meus favoritos', '', 'perfil')}
-    <div class="seg" style="max-width:380px"><button class="${ui.favTab === 'empresas' ? 'on' : ''}" data-act="fav-tab" data-v="empresas">Empresas</button><button class="${ui.favTab === 'materiais' ? 'on' : ''}" data-act="fav-tab" data-v="materiais">Materiais</button></div>
-    <div style="max-width:640px">${body || '<div class="empty card">Você ainda não favoritou nada.</div>'}</div>`;
-}
-function chatInfo(id) {
-  if (String(id).startsWith('r')) { const r = S.requests.find(x => 'r' + x.id === id); return r ? { name:r.name, sub:'Interessado' } : null; }
-  const c = coById(id); return c ? { name:c.name, sub:'Online', co:true } : null;
-}
-const REPLIES = ['Ótimo! Pode trazer hoje mesmo ou agendar para amanhã. Estamos à disposição.', 'Perfeito, vou separar o material para você.', 'Combinado! Qual o melhor horário para a coleta?', 'Obrigado pelo contato! Já anotei aqui.'];
-function viewChat(id) {
-  const info = chatInfo(id); if (!info) return viewHome();
-  if (!S.chats[id]) {
-    S.chats[id] = info.co
-      ? [{ me:true, t:'Olá! Gostaria de saber se vocês estão comprando plástico PET e qual o valor por kg.', h:'10:24' }, { me:false, t:'Olá! Sim, estamos comprando plástico PET. O valor é de R$ 1,20/kg. Qual a quantidade que você tem disponível?', h:'10:27' }]
-      : [{ me:false, t:'Olá! Tenho interesse no seu material. Ainda está disponível?', h:'09:12' }];
-    save();
-  }
-  const msgs = S.chats[id].map(m => `<div class="bubble ${m.me ? 'me' : 'them'}">${esc(m.t)}<time>${m.h}</time></div>`).join('');
-  const back = String(id).startsWith('r') ? 'solicitacoes' : 'empresa/' + id;
-  return `<div class="chat" style="margin-top:6px">
-    <div class="chat-head"><button class="back" data-go="${back}" aria-label="Voltar">${ic('left')}</button><span class="avatar sm">${esc(initials(info.name))}</span><div style="flex:1"><b>${esc(info.name)}</b><small>${info.sub}</small></div><button class="icon-btn" data-act="call" aria-label="Ligar">${ic('phone', 18)}</button></div>
-    <div class="chat-body" id="chatbody">${msgs}</div>
-    <form class="chat-input" data-form="chat" data-id="${id}"><input name="msg" placeholder="Digite uma mensagem..." autocomplete="off"><button class="send" aria-label="Enviar">${ic('send', 18)}</button></form></div>`;
-}
-function viewPerfil() {
-  const item = (i, label, go, act) => `<button ${go ? `data-go="${go}"` : `data-act="soon"`}>${ic(i)}<span>${label}</span>${ic('right', 18)}</button>`;
-  return `${pageHead(isCo() ? 'Perfil da empresa' : 'Meu perfil')}
-    <div class="profile-head"><span class="avatar lg">${esc(initials(displayName()))}</span><div><h2>${esc(displayName())}</h2><span class="pill">${isCo() ? 'Empresa' : 'Usuário'}</span></div></div>
-    <div class="menu">
-      ${item('user', 'Meus dados')}${item('pin', 'Endereços')}${item('heart', 'Meus favoritos', 'favoritos')}${item('gift', 'Minhas doações / vendas', 'materiais')}
-      ${item('bell', 'Notificações')}${item('cog', 'Configurações')}${item('help', 'Ajuda')}
-      <button data-act="switch-role">${ic('swap')}<span>Alternar para conta ${isCo() ? 'usuário' : 'empresa'}</span>${ic('right', 18)}</button>
-      <button data-act="logout" style="color:var(--danger)">${ic('logout')}<span>Sair</span></button>
-    </div>`;
-}
-const AUTH_ROUTES = ['login', 'cadastro'];
-function render() {
-  let [name, arg] = route();
-  if (!S.auth && !AUTH_ROUTES.includes(name)) { history.replaceState(null, '', '#/login'); name = 'login'; }
-  if (S.auth && (AUTH_ROUTES.includes(name) || !name)) { history.replaceState(null, '', '#/home'); name = 'home'; }
-  if (name === 'empresas' && isCo()) name = 'home';
-  if (name === 'solicitacoes' && !isCo()) name = 'home';
-  disposeMap();
-  const app = $('#app');
-  const TITLES = { login:'Entrar', cadastro:'Cadastro', home:'Início', empresas:'Empresas', materiais:'Materiais', novo:'Cadastrar material', solicitacoes:'Solicitações', mapa:'Mapa', empresa:'Empresa', material:'Material', favoritos:'Favoritos', chat:'Conversa', perfil:'Perfil' };
-  document.title = (TITLES[name] || 'Matéria Link') + ' • Matéria Link';
-  if (name === 'login') app.innerHTML = viewLogin();
-  else if (name === 'cadastro') app.innerHTML = viewCadastro();
-  else {
-    const views = { home:viewHome, empresas:viewEmpresas, materiais:viewMateriais, novo:viewNovo, solicitacoes:viewSolicitacoes, mapa:viewMapa, empresa:() => viewEmpresa(arg), material:() => viewMaterial(arg), favoritos:viewFavoritos, chat:() => viewChat(arg), perfil:viewPerfil };
-    const navKey = ({ empresa:'empresas', material:'empresas', chat:isCo() ? 'solicitacoes' : 'empresas', novo:'', materiais:isCo() ? 'materiais' : 'perfil' })[name] ?? name;
-    app.innerHTML = shell(navKey, (views[name] || viewHome)());
-    if (name === 'mapa') initializeMap();
-  }
-  window.scrollTo(0, 0);
-  const cb = $('#chatbody'); if (cb) cb.scrollTop = cb.scrollHeight;
-}
-function refreshList() { const l = $('#clist'); if (!l) return; l.innerHTML = companyCards(filteredCos(route()[0] === 'empresas')); }
-document.addEventListener('click', e => {
-  const g = e.target.closest('[data-go]');
-  const a = e.target.closest('[data-act]');
-  if (a && !(g && g.contains(a) && g !== a && !a.contains(g) && false)) { if (handleAct(a, e)) return; }
-  if (g) { e.preventDefault(); go(g.dataset.go); }
-});
-function handleAct(a, e) {
-  const d = a.dataset, act = d.act, id = d.id;
-  switch (act) {
-    case 'toggle-pw': { const i = a.parentElement.querySelector('input'); i.type = i.type === 'password' ? 'text' : 'password'; return true; }
-    case 'login-role': ui.loginRole = d.v; render(); return true;
-    case 'signup-role': ui.signup = d.v; render(); return true;
-    case 'forgot': toast('Enviamos um link de recuperação para o seu e-mail (demonstração).'); return true;
-    case 'terms': e.preventDefault(); toast('Termos de Uso e Política de Privacidade (demonstração).'); return true;
-    case 'social': toast('Entre com o e-mail e a senha da sua conta.'); return true;
-    case 'bell': toast('Você não tem novas notificações.'); return true;
-    case 'soon': toast('Em breve!'); return true;
-    case 'call': toast('Ligação indisponível na demonstração.'); return true;
-    case 'chip': ui.chip = d.v; render(); return true;
-    case 'tab': ui.tab = d.v; render(); return true;
-    case 'fav-tab': ui.favTab = d.v; render(); return true;
-    case 'toggle-filters': $('#filters').classList.toggle('open'); return true;
-    case 'clear-filters': S.filters = { types:[], dist:50, city:'' }; ui.chip = 'Todos'; ui.q = ''; save(); render(); return true;
-    case 'mode': formMode = d.v; $$('.seg2 button').forEach(b => b.classList.toggle('on', b.dataset.v === formMode)); $('#price-wrap').classList.toggle('hide', formMode !== 'Vender'); return true;
-    case 'toggle-mat': { const m = S.myMaterials.find(x => x.id === Number(id)); if (m) { m.active = !m.active; save(); render(); toast(m.active ? 'Material ativado.' : 'Material pausado.'); } return true; }
-    case 'del-mat': if (confirm('Excluir este material?')) { S.myMaterials = S.myMaterials.filter(x => x.id !== Number(id)); save(); render(); toast('Material excluído.'); } return true;
-    case 'accept': { const r = S.requests.find(x => x.id === Number(id)); if (r) { r.status = 'andamento'; save(); render(); toast('Solicitação aceita! Combine os detalhes no chat.'); } return true; }
-    case 'finish': S.requests = S.requests.filter(x => x.id !== Number(id)); save(); render(); toast('Solicitação concluída. Obrigado por reciclar!'); return true;
-    case 'locate-me': locateUser(); return true;
-    case 'refresh-map': initializeMap(); toast('Mapa atualizado.'); return true;
-    case 'fav-co': { const n = Number(id); S.favCos = S.favCos.includes(n) ? S.favCos.filter(x => x !== n) : [...S.favCos, n]; save(); render(); toast(S.favCos.includes(n) ? 'Empresa favoritada.' : 'Removida dos favoritos.'); return true; }
-    case 'fav-mat': S.favMats = S.favMats.includes(id) ? S.favMats.filter(x => x !== id) : [...S.favMats, id]; save(); render(); return true;
-    case 'switch-role': toast('Para acessar outro perfil, saia e entre com a conta correspondente.'); return true;
-    case 'logout': save(); S.auth = false; S.currentAccountId = null; S.name = ''; S.company = ''; S.email = ''; S.myMaterials = []; S.requests = []; save(); go('login'); return true;
-  }
-  return false;
-}
-document.addEventListener('input', e => {
-  const t = e.target;
-  if (t.id === 'q') { ui.q = t.value; refreshList(); }
-  if (t.dataset.filter === 'dist') { S.filters.dist = Number(t.value); $('#distv').textContent = 'Até ' + t.value + ' km'; save(); refreshList(); }
-});
-document.addEventListener('change', e => {
-  const t = e.target, f = t.dataset.filter;
-  if (f === 'type') { S.filters.types = $$('[data-filter="type"]:checked').map(i => i.value); save(); refreshList(); }
-  if (f === 'city') { S.filters.city = t.value; save(); refreshList(); }
-});
-document.addEventListener('submit', e => {
-  const form = e.target.closest('form[data-form]'); if (!form) return;
-  e.preventDefault();
-  const fd = Object.fromEntries(new FormData(form).entries());
-  const err = m => { const el = $('#err'); if (el) el.textContent = m; };
-  const kind = form.dataset.form;
-  if (kind === 'login') {
-    const email = (fd.email || '').trim().toLowerCase();
-    const senha = fd.senha || '';
-    if (!email || !senha) return err('Preencha e-mail e senha.');
-    const account = S.accounts.find(item => item.role === ui.loginRole && (item.email.toLowerCase() === email || (item.role === 'empresa' && item.cnpj === email.replace(/\D/g, ''))) && item.password === senha);
-    if (!account) return err('E-mail, CNPJ ou senha incorretos. Confira também o tipo de conta selecionado.');
-    S.auth = true;
-    S.role = account.role;
-    S.currentAccountId = account.id;
-    S.name = account.name || '';
-    S.company = account.company || '';
-    S.email = account.email;
-    S.myMaterials = Array.isArray(account.materials) ? account.materials : [];
-    S.requests = Array.isArray(account.requests) ? account.requests : [];
-    save();
-    toast('Bem-vindo(a), ' + (account.role === 'empresa' ? account.company : account.name) + '!');
-    go('home');
-  }
-  else if (kind === 'cad-usuario') {
-    const nome = (fd.nome || '').trim();
-    const email = (fd.email || '').trim().toLowerCase();
-    if (!nome || !/^\S+@\S+\.\S+$/.test(email)) return err('Informe seu nome e um e-mail válido.');
-    if ((fd.senha || '').length < 8) return err('A senha deve ter pelo menos 8 caracteres.');
-    if (fd.senha !== fd.senha2) return err('As senhas não coincidem.');
-    if (S.accounts.some(item => item.email.toLowerCase() === email)) return err('Já existe uma conta cadastrada com esse e-mail.');
-    const account = { id:Date.now(), role:'usuario', name:nome, email, password:fd.senha, materials:[], requests:[] };
-    S.accounts.push(account);
-    S.auth = true; S.role = 'usuario'; S.currentAccountId = account.id;
-    S.name = account.name; S.company = ''; S.email = account.email;
-    S.myMaterials = []; S.requests = [];
-    save(); toast('Conta criada com sucesso!'); go('home');
-  }
-  else if (kind === 'cad-empresa') {
-    const company = (fd.razao || '').trim();
-    const email = (fd.email || '').trim().toLowerCase();
-    const cnpj = (fd.cnpj || '').replace(/\D/g, '');
-    if (!company) return err('Informe o nome da empresa.');
-    if (cnpj.length !== 14) return err('CNPJ inválido — digite os 14 números.');
-    if (!/^\S+@\S+\.\S+$/.test(email)) return err('Informe um e-mail corporativo válido.');
-    if ((fd.senha || '').length < 8) return err('A senha deve ter pelo menos 8 caracteres.');
-    if (!fd.tel || !fd.tel.trim()) return err('Informe o telefone da empresa.');
-    if (!fd.end || !fd.end.trim()) return err('Informe o endereço da empresa.');
-    if (S.accounts.some(item => item.email.toLowerCase() === email || (item.role === 'empresa' && item.cnpj === cnpj))) return err('Já existe uma conta com esse e-mail ou CNPJ.');
-    const account = { id:Date.now(), role:'empresa', company, email, cnpj, password:fd.senha, tel:fd.tel.trim(), address:fd.end.trim(), materials:[], requests:[] };
-    S.accounts.push(account);
-    S.auth = true; S.role = 'empresa'; S.currentAccountId = account.id;
-    S.name = ''; S.company = account.company; S.email = account.email;
-    S.myMaterials = []; S.requests = [];
-    save(); toast('Empresa cadastrada com sucesso!'); go('home');
-  }
-  else if (kind === 'novo') {
-    const kg = Number(fd.kg);
-    if (!kg || kg <= 0) return err('Informe a quantidade em kg.');
-    const price = formMode === 'Vender' ? Number(fd.price || 0) : 0;
-    const name = fd.type === 'Plástico' && !fd.desc ? 'Plástico PET' : (fd.desc ? fd.desc.split(/[,.]/)[0].slice(0, 28) : fd.type);
-    S.myMaterials.unshift({ id:S.nextId++, type:fd.type, name:name || fd.type, mode:formMode, kg, price, active:true });
-    save(); toast('Material publicado!'); go('materiais');
-  }
-  else if (kind === 'chat') {
-    const text = (fd.msg || '').trim(); if (!text) return;
-    const id = form.dataset.id;
-    S.chats[id].push({ me:true, t:text, h:nowHM() }); save(); render();
-    setTimeout(() => {
-      if (!S.chats[id]) return;
-      S.chats[id].push({ me:false, t:REPLIES[Math.floor(Math.random() * REPLIES.length)], h:nowHM() }); save();
-      if (route()[0] === 'chat' && route()[1] === id) { render(); }
-    }, 1200);
-    setTimeout(() => { const i = $('.chat-input input'); if (i) i.focus(); }, 0);
-  }
-});
-document.addEventListener('input', e => {
-  if (e.target.name !== 'cnpj') return;
-  let v = e.target.value.replace(/\D/g, '').slice(0, 14);
-  v = v.replace(/^(\d{2})(\d)/, '$1.$2').replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3').replace(/\.(\d{3})(\d)/, '.$1/$2').replace(/(\d{4})(\d)/, '$1-$2');
-  e.target.value = v;
-});
-window.addEventListener('hashchange', render);
-render();
-})();
